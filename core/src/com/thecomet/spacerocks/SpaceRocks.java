@@ -8,28 +8,42 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import java.util.ArrayList;
+
 public class SpaceRocks extends ApplicationAdapter {
     private SpriteBatch batch;
     private Texture img;
-    private Ship ship;
-    
+
+    private ArrayList<Entity> entities = new ArrayList<Entity>();
+
     @Override
     public void create() {
         batch = new SpriteBatch();
         img = new Texture("badlogic.jpg");
-        ship = new Ship();
-        ship.create();
+
+        createShip();
     }
 
+    private void createShip() {
+        Ship ship = new Ship();
+        ship.create();
+        entities.add(ship);
+    }
 
     @Override
     public void render() {
-        ship.update(1.0f/60);
+        for (Entity entity : entities) {
+            entity.update(1.0f/60);
+        }
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        ship.render(batch);
+
+        for (Entity entity : entities) {
+            entity.render(batch);
+        }
+
         batch.end();
     }
     
@@ -37,6 +51,9 @@ public class SpaceRocks extends ApplicationAdapter {
     public void dispose() {
         batch.dispose();
         img.dispose();
-        ship.dispose();
+
+        for (Entity entity : entities) {
+            entity.dispose();
+        }
     }
 }

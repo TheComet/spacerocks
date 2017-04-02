@@ -12,20 +12,28 @@ public class Ship extends Entity {
     private static final float ROTATION_SPEED = 100;
     private static final float ACCELERATION = 10;
     private static final float MAX_VELOCITY = 5;
+    private static final float RECOIL_FORCE = 0.1f;
 
     private boolean rotateLeft;
     private boolean rotateRight;
     private boolean accelerate;
-    private boolean decelerate;
 
     private float exhaustTimer = 0;
     private boolean doDrawExhaust = false;
+    private boolean shooting;
 
     private ShapeRenderer shapeRenderer;
     private Vector2 velocity = new Vector2();
 
-    public Ship() {
-        Gdx.input.setInputProcessor(new ShipInputProcessor(this));
+    private void processShooting() {
+        if (shooting) {
+            velocity.mulAdd(getRotation(), -RECOIL_FORCE);
+            spawnBullet();
+        }
+    }
+
+    private void spawnBullet() {
+
     }
 
     private void updatePosition() {
@@ -33,16 +41,20 @@ public class Ship extends Entity {
     }
 
     private void updateVelocity(float timeStep) {
-        Vector2 direction = new Vector2(0, 1).rotate(rotation);
-        updateExhaustFlicker(timeStep, true);
+
         if (accelerate) {
+            Vector2 direction = getRotation();
             velocity.mulAdd(direction, timeStep * ACCELERATION);
             updateExhaustFlicker(timeStep, false);
-        } else if (decelerate) {
-            velocity.mulAdd(direction, - timeStep * ACCELERATION);
+        } else {
+            updateExhaustFlicker(timeStep, true);
         }
 
         velocity.clamp(0, MAX_VELOCITY);
+    }
+
+    private Vector2 getRotation() {
+        return new Vector2(0, 1).rotate(rotation);
     }
 
     private void updateRotation(float timeStep) {
@@ -77,14 +89,15 @@ public class Ship extends Entity {
         this.accelerate = accelerate;
     }
 
-    public void setDecelerate(boolean decelerate) {
-        this.decelerate = decelerate;
+    public void setShooting(boolean shooting) {
+        this.shooting = shooting;
     }
 
     @Override
     public void create() {
         shapeRenderer = new ShapeRenderer();
         camera = new OrthographicCamera();
+        Gdx.input.setInputProcessor(new ShipInputProcessor(this));
     }
 
     @Override
@@ -117,6 +130,7 @@ public class Ship extends Entity {
 
     @Override
     public void update(float timeStep) {
+        processShooting();
         updateRotation(timeStep);
         updateVelocity(timeStep);
         updatePosition();

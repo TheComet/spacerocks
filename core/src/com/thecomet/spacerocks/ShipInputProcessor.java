@@ -25,8 +25,8 @@ public class ShipInputProcessor implements InputProcessor {
             case Input.Keys.UP:
                 ship.setAccelerate(true);
                 return true;
-            case Input.Keys.DOWN:
-                ship.setDecelerate(true);
+            case Input.Keys.SPACE:
+                ship.setShooting(true);
                 return true;
         }
 
@@ -45,8 +45,8 @@ public class ShipInputProcessor implements InputProcessor {
             case Input.Keys.UP:
                 ship.setAccelerate(false);
                 return true;
-            case Input.Keys.DOWN:
-                ship.setDecelerate(false);
+            case Input.Keys.SPACE:
+                ship.setShooting(false);
                 return true;
         }
 
