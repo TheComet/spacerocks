@@ -12,15 +12,16 @@ public class SpaceRocks extends ApplicationAdapter {
     private Ship ship;
     
     @Override
-    public void create () {
+    public void create() {
         batch = new SpriteBatch();
         img = new Texture("badlogic.jpg");
         ship = new Ship();
+        ship.create();
     }
 
     @Override
-    public void render () {
-        Gdx.gl.glClearColor(1, 0, 0, 1);
+    public void render() {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         ship.render(batch);
@@ -28,8 +29,9 @@ public class SpaceRocks extends ApplicationAdapter {
     }
     
     @Override
-    public void dispose () {
+    public void dispose() {
         batch.dispose();
         img.dispose();
+        ship.dispose();
     }
 }
