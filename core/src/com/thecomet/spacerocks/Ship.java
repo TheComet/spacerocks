@@ -11,6 +11,7 @@ public class Ship extends Entity {
 
     private static final float ROTATION_SPEED = 100;
     private static final float ACCELERATION = 10;
+    private static final float MAX_VELOCITY = 5;
 
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
@@ -56,6 +57,8 @@ public class Ship extends Entity {
         } else if (decelerate) {
             velocity.mulAdd(direction, - timeStep * ACCELERATION);
         }
+
+        velocity.clamp(0, MAX_VELOCITY);
     }
 
     private void updateRotation(float timeStep) {
