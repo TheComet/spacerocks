@@ -9,8 +9,8 @@ import com.badlogic.gdx.math.Vector2;
 public class Ship extends Entity {
     private OrthographicCamera camera;
 
-    private static final float ROTATION_SPEED = 40;
-    private static final float ACCELERATION = 1;
+    private static final float ROTATION_SPEED = 100;
+    private static final float ACCELERATION = 10;
 
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
@@ -30,7 +30,7 @@ public class Ship extends Entity {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(1, 1, 1, 1);
         shapeRenderer.identity();
-        shapeRenderer.translate(200, 200, 0);
+        shapeRenderer.translate(position.x, position.y, 0);
         shapeRenderer.rotate(0, 0, 1, rotation);
         shapeRenderer.line(-10, -20, 0, 13);
         shapeRenderer.line(10f, -20, 0, 13);
@@ -50,18 +50,19 @@ public class Ship extends Entity {
     }
 
     private void updateVelocity(float timeStep) {
+        Vector2 direction = new Vector2(0, 1).rotate(rotation);
         if (accelerate) {
-            velocity.add(new Vector2(1, 0).rotate(rotation));
+            velocity.mulAdd(direction, timeStep * ACCELERATION);
         } else if (decelerate) {
-            velocity.sub(new Vector2(1, 0).rotate(rotation));
+            velocity.mulAdd(direction, - timeStep * ACCELERATION);
         }
     }
 
     private void updateRotation(float timeStep) {
         if (rotateLeft) {
-            rotation -= timeStep * ROTATION_SPEED;
-        } else if (rotateRight) {
             rotation += timeStep * ROTATION_SPEED;
+        } else if (rotateRight) {
+            rotation -= timeStep * ROTATION_SPEED;
         }
     }
 
