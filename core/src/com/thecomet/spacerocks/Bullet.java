@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
  * Created by ferdi on 02.04.17.
  */
 public class Bullet extends Entity {
-    private static final float VELOCITY = 20;
+    private static final float VELOCITY = 1000;
 
     private Vector2 velocity;
 
@@ -25,8 +25,12 @@ public class Bullet extends Entity {
 
     @Override
     public void render(Batch batch, ShapeRenderer shapeRenderer) {
+        shapeRenderer.identity();
+        shapeRenderer.translate(position.x, position.y, 0);
+        shapeRenderer.rotate(0, 0, 1, rotation);
+
         shapeRenderer.setColor(1, 0, 0, 1);
-        shapeRenderer.circle(position.x, position.y, 5);
+        shapeRenderer.circle(0, 0, 5);
     }
 
     @Override
@@ -35,6 +39,6 @@ public class Bullet extends Entity {
     }
 
     private void updatePosition(float timeStep) {
-        position.add(velocity.scl(timeStep));
+        position.add(velocity.cpy().scl(timeStep));
     }
 }

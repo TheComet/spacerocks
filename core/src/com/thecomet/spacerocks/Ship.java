@@ -113,6 +113,7 @@ public class Ship extends Entity {
     @Override
     public void render(Batch batch, ShapeRenderer shapeRenderer) {
         shapeRenderer.identity();
+        shapeRenderer.translate(camera.position.x, camera.position.y, camera.position.z);
         shapeRenderer.translate(position.x, position.y, 0);
         shapeRenderer.rotate(0, 0, 1, rotation);
 
