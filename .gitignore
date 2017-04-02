@@ -1,0 +1,21 @@
+# ignore gradle/build folders
+/build
+.gradle/
+
+# ignore IntelliJ IDEA files
+.idea/
+*.iml
+/bin/
+
+# ignore eclipse stuff
+.classpath
+.project
+.settings/
+.metadata/
+
+# ignore Windows Thumbs.db file
+Thumbs.db
+
+# misc
+*.pdf
+*.swp
