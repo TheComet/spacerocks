@@ -25,26 +25,6 @@ public class Ship extends Entity {
         Gdx.input.setInputProcessor(new ShipInputProcessor(this));
     }
 
-    @Override
-    public void render(Batch batch) {
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(1, 1, 1, 1);
-        shapeRenderer.identity();
-        shapeRenderer.translate(200, 200, 0);
-        shapeRenderer.rotate(0, 0, 1, rotation);
-        shapeRenderer.line(-10, -20, 0, 13);
-        shapeRenderer.line(10f, -20, 0, 13);
-        shapeRenderer.line(-8, -13.5f, 8, -13.5f);
-        shapeRenderer.end();
-    }
-
-    @Override
-    public void update(float timeStep) {
-        updateRotation(timeStep);
-        updateVelocity(timeStep);
-        updatePosition();
-    }
-
     private void updatePosition() {
         position.add(velocity);
     }
@@ -92,5 +72,29 @@ public class Ship extends Entity {
         shapeRenderer.dispose();
         shapeRenderer = null;
         camera = null;
+    }
+
+    @Override
+    public void render(Batch batch) {
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+
+        //
+        shapeRenderer.identity();
+        shapeRenderer.translate(200, 200, 0);
+        shapeRenderer.rotate(0, 0, 1, rotation);
+        shapeRenderer.translate(camera.position.x, camera.position.y, 0);
+
+        shapeRenderer.setColor(1, 1, 1, 1);
+        shapeRenderer.line(-10, -20, 0, 13);
+        shapeRenderer.line(10f, -20, 0, 13);
+        shapeRenderer.line(-8, -13.5f, 8, -13.5f);
+        shapeRenderer.end();
+    }
+
+    @Override
+    public void update(float timeStep) {
+        updateRotation(timeStep);
+        updateVelocity(timeStep);
+        updatePosition();
     }
 }
