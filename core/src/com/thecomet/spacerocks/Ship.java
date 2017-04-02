@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 public class Ship extends Entity {
+    private final SpaceRocks spaceRocks;
     private OrthographicCamera camera;
 
     private static final float ROTATION_SPEED = 100;
@@ -22,8 +23,11 @@ public class Ship extends Entity {
     private boolean doDrawExhaust = false;
     private boolean shooting;
 
-    private ShapeRenderer shapeRenderer;
     private Vector2 velocity = new Vector2();
+
+    public Ship(SpaceRocks spaceRocks) {
+        this.spaceRocks = spaceRocks;
+    }
 
     private void processShooting() {
         if (shooting) {
@@ -33,7 +37,9 @@ public class Ship extends Entity {
     }
 
     private void spawnBullet() {
-
+        Bullet bullet = new Bullet(new Vector2(position), getRotation());
+        bullet.create();
+        spaceRocks.addEntity(bullet);
     }
 
     private void updatePosition() {
@@ -41,7 +47,6 @@ public class Ship extends Entity {
     }
 
     private void updateVelocity(float timeStep) {
-
         if (accelerate) {
             Vector2 direction = getRotation();
             velocity.mulAdd(direction, timeStep * ACCELERATION);
@@ -73,8 +78,9 @@ public class Ship extends Entity {
 
         exhaustTimer += timeStep;
         doDrawExhaust = exhaustTimer >= 0.07;
-        if (exhaustTimer >= 0.14)
+        if (exhaustTimer >= 0.14) {
             exhaustTimer = 0;
+        }
     }
 
     public void setRotateLeft(boolean rotateLeft) {
@@ -95,22 +101,17 @@ public class Ship extends Entity {
 
     @Override
     public void create() {
-        shapeRenderer = new ShapeRenderer();
         camera = new OrthographicCamera();
         Gdx.input.setInputProcessor(new ShipInputProcessor(this));
     }
 
     @Override
     public void dispose() {
-        shapeRenderer.dispose();
-        shapeRenderer = null;
         camera = null;
     }
 
     @Override
-    public void render(Batch batch) {
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-
+    public void render(Batch batch, ShapeRenderer shapeRenderer) {
         shapeRenderer.identity();
         shapeRenderer.translate(position.x, position.y, 0);
         shapeRenderer.rotate(0, 0, 1, rotation);
@@ -124,8 +125,6 @@ public class Ship extends Entity {
             shapeRenderer.line(-3, -18, 0, -26);
             shapeRenderer.line(3, -18, 0, -26);
         }
-
-        shapeRenderer.end();
     }
 
     @Override
