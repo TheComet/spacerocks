@@ -3,9 +3,6 @@ package com.thecomet.spacerocks;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 
-/**
- * Created by ferdi on 02.04.17.
- */
 public class ShipInputProcessor implements InputProcessor {
     private final Ship ship;
 
@@ -15,6 +12,7 @@ public class ShipInputProcessor implements InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
+        System.out.println("key down");
         switch (keycode) {
             case Input.Keys.LEFT:
                 ship.setRotateLeft(true);
@@ -35,6 +33,7 @@ public class ShipInputProcessor implements InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
+        System.out.println("key up");
         switch (keycode) {
             case Input.Keys.LEFT:
                 ship.setRotateLeft(false);

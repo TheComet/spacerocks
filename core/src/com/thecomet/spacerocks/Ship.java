@@ -1,14 +1,14 @@
 package com.thecomet.spacerocks;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 
 public class Ship extends Entity {
-    private final SpaceRocks spaceRocks;
-    private OrthographicCamera camera;
+    private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     private static final float ROTATION_SPEED = 100;
     private static final float ACCELERATION = 10;
@@ -25,30 +25,66 @@ public class Ship extends Entity {
 
     private Vector2 velocity = new Vector2();
 
-    public Ship(SpaceRocks spaceRocks) {
-        this.spaceRocks = spaceRocks;
+    public Ship() {
+        addListener(new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                switch (keycode) {
+                    case Input.Keys.LEFT:
+                        setRotateLeft(true);
+                        return true;
+                    case Input.Keys.RIGHT:
+                        setRotateRight(true);
+                        return true;
+                    case Input.Keys.UP:
+                        setAccelerate(true);
+                        return true;
+                    case Input.Keys.SPACE:
+                        setShooting(true);
+                        return true;
+                }
+
+                return false;
+            }
+
+            @Override
+            public boolean keyUp(InputEvent event, int keycode) {
+                switch (keycode) {
+                    case Input.Keys.LEFT:
+                        setRotateLeft(false);
+                        return true;
+                    case Input.Keys.RIGHT:
+                        setRotateRight(false);
+                        return true;
+                    case Input.Keys.UP:
+                        setAccelerate(false);
+                        return true;
+                    case Input.Keys.SPACE:
+                        setShooting(false);
+                        return true;
+                }
+
+                return false;
+            }
+        });
     }
 
     private void processShooting() {
+        Vector2 direction = calculateDirection();
         if (shooting) {
-            velocity.mulAdd(getRotation(), -RECOIL_FORCE);
-            spawnBullet();
+            velocity.mulAdd(direction, -RECOIL_FORCE);
+            Bullet bullet = new Bullet(new Vector2(getX(), getY()), direction);
+            getStage().addActor(bullet);
         }
     }
 
-    private void spawnBullet() {
-        Bullet bullet = new Bullet(new Vector2(position), getRotation());
-        bullet.create();
-        spaceRocks.addEntity(bullet);
-    }
-
     private void updatePosition() {
-        position.add(velocity);
+        setPosition(getX() + velocity.x, getY() + velocity.y);
     }
 
     private void updateVelocity(float timeStep) {
         if (accelerate) {
-            Vector2 direction = getRotation();
+            Vector2 direction = calculateDirection();
             velocity.mulAdd(direction, timeStep * ACCELERATION);
             updateExhaustFlicker(timeStep, false);
         } else {
@@ -58,15 +94,15 @@ public class Ship extends Entity {
         velocity.clamp(0, MAX_VELOCITY);
     }
 
-    private Vector2 getRotation() {
-        return new Vector2(0, 1).rotate(rotation);
+    private Vector2 calculateDirection() {
+        return new Vector2(0, 1).rotate(getRotation());
     }
 
     private void updateRotation(float timeStep) {
         if (rotateLeft) {
-            rotation += timeStep * ROTATION_SPEED;
+            setRotation(getRotation() + timeStep * ROTATION_SPEED);
         } else if (rotateRight) {
-            rotation -= timeStep * ROTATION_SPEED;
+            setRotation(getRotation() - timeStep * ROTATION_SPEED);
         }
     }
 
@@ -100,22 +136,9 @@ public class Ship extends Entity {
     }
 
     @Override
-    public void create() {
-        camera = new OrthographicCamera();
-        Gdx.input.setInputProcessor(new ShipInputProcessor(this));
-    }
-
-    @Override
-    public void dispose() {
-        camera = null;
-    }
-
-    @Override
-    public void render(Batch batch, ShapeRenderer shapeRenderer) {
-        shapeRenderer.identity();
-        shapeRenderer.translate(camera.position.x, camera.position.y, camera.position.z);
-        shapeRenderer.translate(position.x, position.y, 0);
-        shapeRenderer.rotate(0, 0, 1, rotation);
+    public void draw(Batch batch, float parentAlpha) {
+        batch.end();
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
         shapeRenderer.setColor(1, 1, 1, 1);
         shapeRenderer.line(-10, -20, 0, 13);
@@ -126,6 +149,9 @@ public class Ship extends Entity {
             shapeRenderer.line(-3, -18, 0, -26);
             shapeRenderer.line(3, -18, 0, -26);
         }
+
+        shapeRenderer.end();
+        batch.begin();
     }
 
     @Override

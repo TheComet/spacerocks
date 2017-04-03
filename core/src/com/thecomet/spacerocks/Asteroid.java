@@ -19,16 +19,6 @@ public abstract class Asteroid extends Entity {
     }
 
     @Override
-    public void create() {
-
-    }
-
-    @Override
-    public void dispose() {
-
-    }
-
-    @Override
     public void update(float timeStep) {
 
     }

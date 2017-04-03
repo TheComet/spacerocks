@@ -4,8 +4,9 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class SmallAsteroid extends Asteroid {
+
     @Override
-    public void render(Batch batch, ShapeRenderer shapeRenderer) {
+    public void draw(Batch batch, float parentAlpha) {
 
     }
 }
