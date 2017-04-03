@@ -19,7 +19,7 @@ public class Bullet extends Entity {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         batch.end();
-        shapeRenderer.begin();
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
         shapeRenderer.identity();
         shapeRenderer.translate(getX(), getY(), 0);
