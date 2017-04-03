@@ -1,10 +1,5 @@
 package com.thecomet.spacerocks;
 
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-
-/**
- * Keeps track
- */
 public class ShipControls {
     private final static int TURN_LEFT  = 0x01;
     private final static int TURN_RIGHT = 0x02;
