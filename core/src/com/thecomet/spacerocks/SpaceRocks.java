@@ -26,8 +26,7 @@ public class SpaceRocks extends ApplicationAdapter {
 
     @Override
     public void render() {
-        float timeStep = 1.0f / 60; // TODO Calculate this using previous frame
-        stage.act(timeStep);
+        stage.act(Gdx.graphics.getDeltaTime());
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.draw();

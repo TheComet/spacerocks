@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 
@@ -64,6 +65,17 @@ public class Ship extends Entity {
                         return true;
                 }
 
+                return false;
+            }
+        });
+
+        addAction(new Action() {
+            @Override
+            public boolean act(float delta) {
+                processShooting();
+                updateRotation(delta);
+                updateVelocity(delta);
+                updatePosition();
                 return false;
             }
         });
@@ -140,6 +152,10 @@ public class Ship extends Entity {
         batch.end();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
+        shapeRenderer.identity();
+        shapeRenderer.translate(getX(), getY(), 0);
+        shapeRenderer.rotate(0, 0, 1, getRotation());
+
         shapeRenderer.setColor(1, 1, 1, 1);
         shapeRenderer.line(-10, -20, 0, 13);
         shapeRenderer.line(10f, -20, 0, 13);
@@ -156,9 +172,5 @@ public class Ship extends Entity {
 
     @Override
     public void update(float timeStep) {
-        processShooting();
-        updateRotation(timeStep);
-        updateVelocity(timeStep);
-        updatePosition();
     }
 }
