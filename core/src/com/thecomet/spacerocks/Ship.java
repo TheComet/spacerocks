@@ -2,7 +2,7 @@ package com.thecomet.spacerocks;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -10,8 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import java.util.HashMap;
 
 public class Ship extends Actor {
-    private Texture shipTexture;
-    private Texture exhaustTexture;
+    private TextureRegion shipTextureRegion;
+    private TextureRegion exhaustTextureRegion;
     private ShipControls controls;
 
     private static final float ROTATION_SPEED = 100;
@@ -38,11 +38,16 @@ public class Ship extends Actor {
     }
 
     private void loadTextures() {
-        Lines lines = Lines.load("lines/ship.json");
-        HashMap<String, Texture> textures = lines.renderToTextures(30);
+        int shipScale = 32;
 
-        shipTexture = textures.get("ship");
-        exhaustTexture = textures.get("exhaust");
+        Lines lines = Lines.load("lines/ship.json");
+        HashMap<String, TextureRegion> regions = lines.renderToTextures(shipScale);
+
+        shipTextureRegion = regions.get("ship");
+        exhaustTextureRegion = regions.get("exhaust");
+
+        Vector2 origin = lines.calculateOrigin(shipScale);
+        setOrigin(origin.x, origin.y);
     }
 
     private void createActions() {
@@ -114,29 +119,13 @@ public class Ship extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.draw(shipTexture, getX(), getY());
+        batch.draw(shipTextureRegion, getX(), getY(), getOriginX(), getOriginY(),
+                shipTextureRegion.getRegionWidth(), shipTextureRegion.getRegionHeight(),
+                1, 1, getRotation());
         if (doDrawExhaust) {
-            batch.draw(exhaustTexture, getX(), getY());
+            batch.draw(exhaustTextureRegion, getX(), getY(), getOriginX(), getOriginY(),
+                    exhaustTextureRegion.getRegionWidth(), exhaustTextureRegion.getRegionHeight(),
+                    1, 1, getRotation());
         }
-        /*
-        batch.end();
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-
-        shapeRenderer.identity();
-        shapeRenderer.translate(getX(), getY(), 0);
-        shapeRenderer.rotate(0, 0, 1, getRotation());
-
-        shapeRenderer.setColor(1, 1, 1, 1);
-        shapeRenderer.line(-10, -20, 0, 13);
-        shapeRenderer.line(10f, -20, 0, 13);
-        shapeRenderer.line(-8, -13.5f, 8, -13.5f);
-
-        if (doDrawExhaust) {
-            shapeRenderer.line(-3, -18, 0, -26);
-            shapeRenderer.line(3, -18, 0, -26);
-        }
-
-        shapeRenderer.end();
-        batch.begin();*/
     }
 }
