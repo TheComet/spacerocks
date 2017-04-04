@@ -1,6 +1,8 @@
 package com.thecomet.spacerocks;
 
-public abstract class Asteroid extends Entity {
+import com.badlogic.gdx.scenes.scene2d.Actor;
+
+public abstract class Asteroid extends Actor {
     enum AsteroidClass {
         TINY,
         SMALL,
@@ -16,10 +18,5 @@ public abstract class Asteroid extends Entity {
             case HUGE: return new HugeAsteroid();
         }
         return null;
-    }
-
-    @Override
-    public void update(float timeStep) {
-
     }
 }

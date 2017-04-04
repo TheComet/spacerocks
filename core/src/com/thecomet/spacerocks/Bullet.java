@@ -3,9 +3,11 @@ package com.thecomet.spacerocks;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 
-public class Bullet extends Entity {
+public class Bullet extends Actor {
     private static final float VELOCITY = 1000;
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
@@ -14,6 +16,14 @@ public class Bullet extends Entity {
     public Bullet(Vector2 position, Vector2 direction) {
         setPosition(position.x, position.y);
         velocity = direction.scl(VELOCITY);
+
+        addAction(new Action() {
+            @Override
+            public boolean act(float delta) {
+                updatePosition(delta);
+                return false;
+            }
+        });
     }
 
     @Override
@@ -30,11 +40,6 @@ public class Bullet extends Entity {
 
         shapeRenderer.end();
         batch.begin();
-    }
-
-    @Override
-    public void update(float timeStep) {
-        updatePosition(timeStep);
     }
 
     private void updatePosition(float timeStep) {

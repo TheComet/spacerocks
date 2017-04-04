@@ -4,8 +4,9 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class Ship extends Entity {
+public class Ship extends Actor {
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
     private ShipControls controls;
 
@@ -111,9 +112,5 @@ public class Ship extends Entity {
 
         shapeRenderer.end();
         batch.begin();
-    }
-
-    @Override
-    public void update(float timeStep) {
     }
 }
