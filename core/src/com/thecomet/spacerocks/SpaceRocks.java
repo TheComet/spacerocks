@@ -17,6 +17,7 @@ public class SpaceRocks extends ApplicationAdapter {
 
         Ship player = new Ship();
         stage.addActor(player);
+        stage.addActor(Asteroid.createAsteroid(Asteroid.AsteroidClass.HUGE));
         stage.setKeyboardFocus(player);
     }
 

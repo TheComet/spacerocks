@@ -1,8 +1,6 @@
 package com.thecomet.spacerocks;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
-
-public abstract class Asteroid extends Actor {
+public abstract class Asteroid extends LineEntity {
     enum AsteroidClass {
         TINY,
         SMALL,
