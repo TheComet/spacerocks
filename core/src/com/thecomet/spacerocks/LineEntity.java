@@ -11,8 +11,25 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import java.util.HashMap;
 
 public class LineEntity extends Actor {
-    protected HashMap<String, TextureRegion> textureRegions;
+    private SpaceRocks spaceRocks;
+    private HashMap<String, TextureRegion> textureRegions;
     private Vector2 actionPoint;
+
+    public LineEntity(SpaceRocks spaceRocks) {
+        this.spaceRocks = spaceRocks;
+    }
+
+    public void setPosition(Vector2 position) {
+        setPosition(position.x, position.y);
+    }
+
+    public SpaceRocks getSpaceRocks() {
+        return spaceRocks;
+    }
+
+    public HashMap<String, TextureRegion> getTextureRegions() {
+        return textureRegions;
+    }
 
     public Vector2 getDirection() {
         return new Vector2(0, 1).rotate(getRotation());

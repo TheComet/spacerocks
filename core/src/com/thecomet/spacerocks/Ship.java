@@ -10,23 +10,25 @@ public class Ship extends LineEntity {
     private TextureRegion exhaustTextureRegion;
     private ShipControls controls;
 
-    private static final float ROTATION_SPEED = 100;
+    private static final float ROTATION_SPEED = 200;
     private static final float ACCELERATION = 10;
     private static final float MAX_VELOCITY = 5;
-    private static final float RECOIL_FORCE = 0.001f;
+    private static final float RECOIL_FORCE = 0.0002f;
 
     private float exhaustTimer = 0;
     private boolean doDrawExhaust = false;
 
     private Vector2 velocity = new Vector2();
 
-    public Ship() {
+    public Ship(SpaceRocks spaceRocks) {
+        super(spaceRocks);
+
         setupControls();
         createActions();
 
         loadLines("lines/ship.json", 32);
-        shipTextureRegion = textureRegions.get("ship");
-        exhaustTextureRegion = textureRegions.get("exhaust");
+        shipTextureRegion = getTextureRegions().get("ship");
+        exhaustTextureRegion = getTextureRegions().get("exhaust");
     }
 
     private void setupControls() {
@@ -56,9 +58,10 @@ public class Ship extends LineEntity {
     private void processShooting() {
         if (controls.getShoot()) {
             Vector2 direction = getDirection();
-            Vector2 spawnPoint = getActionPoint();
-            Bullet bullet = new Bullet(spawnPoint, direction);
-            getStage().addActor(bullet);
+
+            Bullet bullet = getSpaceRocks().createBullet();
+            bullet.setPosition(getActionPoint());
+            bullet.setDirection(direction);
 
             velocity.mulAdd(direction, -RECOIL_FORCE);
         }

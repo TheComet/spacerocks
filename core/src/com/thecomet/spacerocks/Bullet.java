@@ -8,9 +8,8 @@ public class Bullet extends LineEntity {
 
     private Vector2 velocity;
 
-    public Bullet(Vector2 position, Vector2 direction) {
-        setPosition(position.x, position.y);
-        velocity = direction.scl(VELOCITY);
+    public Bullet(SpaceRocks spaceRocks) {
+        super(spaceRocks);
 
         loadLines("lines/bullet.json", 12);
 
@@ -21,6 +20,10 @@ public class Bullet extends LineEntity {
                 return false;
             }
         });
+    }
+
+    public void setDirection(Vector2 direction) {
+        velocity = direction.scl(VELOCITY);
     }
 
     private void updatePosition(float timeStep) {
