@@ -14,17 +14,10 @@ public class LineEntity extends Actor {
     private SpaceRocks spaceRocks;
     private HashMap<String, TextureRegion> textureRegions;
     private Vector2 actionPoint;
+    private boolean doDrawBoundingBoxes = false;
 
     public LineEntity(SpaceRocks spaceRocks) {
         this.spaceRocks = spaceRocks;
-    }
-
-    public Vector2 getPosition() {
-        return new Vector2(getX(), getY());
-    }
-
-    public void setPosition(Vector2 position) {
-        setPosition(position.x, position.y);
     }
 
     public SpaceRocks getSpaceRocks() {
@@ -35,12 +28,28 @@ public class LineEntity extends Actor {
         return textureRegions;
     }
 
+    public Vector2 getPosition() {
+        return new Vector2(getX(), getY());
+    }
+
+    public void setPosition(Vector2 position) {
+        setPosition(position.x, position.y);
+    }
+
+
     public Vector2 getDirection() {
         return new Vector2(0, 1).rotate(getRotation());
     }
 
     public Vector2 getActionPoint() {
         return actionPoint.cpy().sub(getOriginX(), getOriginY()).rotate(getRotation()).add(getX() + getOriginX(), getY() + getOriginY());
+    }
+
+    /**
+     * Useful for debugging pixmap related stuff.
+     */
+    public void drawBoundingBoxes(boolean enable) {
+        doDrawBoundingBoxes = enable;
     }
 
     protected void loadLines(String linesFile, int scaleInPixels) {
@@ -64,6 +73,9 @@ public class LineEntity extends Actor {
             width *= lines.getAspectRatio();
         }
 
+        // Fix off-by-one error (pixel space is from 0 to N-1, but the line data is from 0 to N)
+        scaleInPixels--;
+
         Pixmap.Format format = Pixmap.Format.RGBA8888;
         HashMap<String, Lines.Group> groups = lines.getGroups();
         HashMap<String, TextureRegion> regions = new HashMap<>();
@@ -72,14 +84,18 @@ public class LineEntity extends Actor {
         int i = 0;
         for (String groupKey : groups.keySet()) {
             Pixmap pixmap = new Pixmap(width, height, format);
+            if (doDrawBoundingBoxes) {
+                pixmap.setColor(Color.RED);
+                pixmap.drawRectangle(0, 0, width, height);
+            }
             pixmap.setColor(Color.WHITE);
             pixmap.setFilter(Pixmap.Filter.BiLinear);
             pixmap.setBlending(Pixmap.Blending.None);
 
             for (Lines.Segment segment : groups.get(groupKey).segments) {
                 pixmap.drawLine(
-                        (int)(segment.start.x * scaleInPixels), height - (int)(segment.start.y * scaleInPixels),
-                        (int)(segment.end.x * scaleInPixels), height - (int)(segment.end.y * scaleInPixels)
+                        (int)(segment.start.x * scaleInPixels), height - 1 - (int)(segment.start.y * scaleInPixels),
+                        (int)(segment.end.x * scaleInPixels), height - 1 - (int)(segment.end.y * scaleInPixels)
                 );
             }
 
