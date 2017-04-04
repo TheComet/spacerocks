@@ -34,7 +34,7 @@ public class SpaceRocks extends ApplicationAdapter {
         stage.getViewport().setScreenSize(1366, 768);
         Gdx.input.setInputProcessor(stage);
 
-        stage.addActor(Asteroid.createAsteroid(Asteroid.AsteroidClass.HUGE));
+        stage.addActor(Asteroid.createAsteroid(this, Asteroid.AsteroidClass.HUGE));
         createShip();
 
         world = new World(new Vector2(0, 0), true);

@@ -18,17 +18,18 @@ public abstract class Asteroid extends LineEntity {
         HUGE
     }
 
-    public static Asteroid createAsteroid(AsteroidClass asteroidClass) {
+    public static Asteroid createAsteroid(SpaceRocks spaceRocks, AsteroidClass asteroidClass) {
         switch (asteroidClass) {
-            case TINY: return new TinyAsteroid();
-            case SMALL: return new HugeAsteroid();
-            case KINDALARGE: return new KindaLargeAsteroid();
-            case HUGE: return new HugeAsteroid();
+            case TINY: return new TinyAsteroid(spaceRocks);
+            case SMALL: return new HugeAsteroid(spaceRocks);
+            case KINDALARGE: return new KindaLargeAsteroid(spaceRocks);
+            case HUGE: return new HugeAsteroid(spaceRocks);
         }
         return null;
     }
 
-    public Asteroid() {
+    public Asteroid(SpaceRocks spaceRocks) {
+        super(spaceRocks);
         turnSpeed = getRandomTurnSpeed();
         velocity = getRandomVelocity();
     }

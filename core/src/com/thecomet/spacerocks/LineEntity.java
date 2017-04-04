@@ -19,6 +19,10 @@ public class LineEntity extends Actor {
         this.spaceRocks = spaceRocks;
     }
 
+    public Vector2 getPosition() {
+        return new Vector2(getX(), getY());
+    }
+
     public void setPosition(Vector2 position) {
         setPosition(position.x, position.y);
     }
