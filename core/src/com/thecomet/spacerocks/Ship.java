@@ -1,13 +1,17 @@
 package com.thecomet.spacerocks;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+import java.util.HashMap;
+
 public class Ship extends Actor {
-    private ShapeRenderer shapeRenderer = new ShapeRenderer();
+    private Texture shipTexture;
+    private Texture exhaustTexture;
     private ShipControls controls;
 
     private static final float ROTATION_SPEED = 100;
@@ -21,10 +25,27 @@ public class Ship extends Actor {
     private Vector2 velocity = new Vector2();
 
     public Ship() {
+        setupControls();
+        loadTextures();
+        createActions();
+    }
+
+    private void setupControls() {
+        // Input mapper implements the listener interface, so add it as a listener to this actor so it receives input
         controls = new ShipControls();
         ShipInputMapper inputMapper = new ShipInputMapper(controls);
         addListener(inputMapper);
+    }
 
+    private void loadTextures() {
+        Lines lines = Lines.load("lines/ship.json");
+        HashMap<String, Texture> textures = lines.renderToTextures(30);
+
+        shipTexture = textures.get("ship");
+        exhaustTexture = textures.get("exhaust");
+    }
+
+    private void createActions() {
         addAction(new Action() {
             @Override
             public boolean act(float delta) {
@@ -93,6 +114,11 @@ public class Ship extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        batch.draw(shipTexture, getX(), getY());
+        if (doDrawExhaust) {
+            batch.draw(exhaustTexture, getX(), getY());
+        }
+        /*
         batch.end();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
@@ -111,6 +137,6 @@ public class Ship extends Actor {
         }
 
         shapeRenderer.end();
-        batch.begin();
+        batch.begin();*/
     }
 }

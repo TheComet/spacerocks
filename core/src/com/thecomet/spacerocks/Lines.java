@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Json;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 public class Lines {
     public HashMap<String, Group> groups = new HashMap<String, Group>();
@@ -22,23 +23,22 @@ public class Lines {
         public ArrayList<Segment> segments = new ArrayList<Segment>();
     }
 
-    public Texture[] renderToTextures(int scaleInPixels) {
-        Texture textures[] = new Texture[groups.size()];
+    public HashMap<String, Texture> renderToTextures(int scaleInPixels) {
+        HashMap<String, Texture> textures = new HashMap<>();
 
-        int i = 0;
-        for (Group group : groups.values()) {
+        groups.forEach((groupKey, groupValue) -> {
             Pixmap pixmap = new Pixmap(64, 64, Pixmap.Format.RGBA8888);
             pixmap.setColor(Color.WHITE);
             pixmap.setFilter(Pixmap.Filter.BiLinear);
-            for (Segment segment : group.segments) {
+            for (Segment segment : groupValue.segments) {
                 pixmap.drawLine(
                         (int)segment.start.x, (int)segment.start.y,
                         (int)segment.end.x, (int)segment.end.y
                 );
             }
-            textures[i++] = new Texture(pixmap);
+            textures.put(groupKey, new Texture(pixmap));
             pixmap.dispose();
-        }
+        });
 
         return textures;
     }
