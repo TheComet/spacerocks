@@ -7,12 +7,20 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class Context implements Disposable {
-    public Stage stage;
-    public World world;
+    private Stage stage;
+    private World world;
 
     public Context() {
         stage = new Stage(new ScreenViewport());
         world = new World(new Vector2(0, 0), true);
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public World getWorld() {
+        return world;
     }
 
     @Override

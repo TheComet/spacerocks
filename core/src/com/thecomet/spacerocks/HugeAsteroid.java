@@ -1,26 +1,15 @@
 package com.thecomet.spacerocks;
 
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 
 public class HugeAsteroid extends Asteroid {
 
     public HugeAsteroid(Context context) {
         super(context);
-        createActions();
         loadLines("lines/huge_asteroid.json", 80);
-        setPosition(100, 100);
-    }
-
-    private void createActions() {
-        addAction(new Action() {
-            @Override
-            public boolean act(float delta) {
-                setRotation(getRotation() + delta * getTurnSpeed());
-                Vector2 movement = new Vector2(getVelocity()).scl(delta);
-                setPosition(getPosition().add(movement));
-                return false;
-            }
-        });
+        setupPhysics(BodyDef.BodyType.DynamicBody);
+        getBody().setTransform(100, 100, 0);
+        getBody().setLinearVelocity(getRandomVelocity());
+        getBody().setAngularVelocity(getRandomTurnSpeed() * (float)Math.PI / 180.0f);
     }
 }

@@ -19,6 +19,7 @@ public class LineSoup {
     }
 
     public static class Group {
+        public boolean physics = true;
         public ArrayList<Segment> segments = new ArrayList<Segment>();
     }
 
@@ -26,19 +27,19 @@ public class LineSoup {
         return groups;
     }
 
-    public Vector2 getOrigin(float scaleInPixels) {
-        return origin.cpy().scl(scaleInPixels);
+    public Vector2 getOrigin() {
+        return origin;
     }
 
-    public Vector2 getActionPoint(float scaleInPixels) {
-        return actionPoint.cpy().scl(scaleInPixels);
+    public Vector2 getActionPoint() {
+        return actionPoint;
     }
 
     public float getAspectRatio() {
         return aspectRatio;
     }
 
-    private void normalise() {
+    public void rescaleLines(int scale) {
         float minx = Float.MAX_VALUE;
         float maxx = -Float.MIN_VALUE;
         float miny = Float.MAX_VALUE;
@@ -61,8 +62,8 @@ public class LineSoup {
 
         float lenx = maxx - minx;
         float leny = maxy - miny;
-        float scale = lenx > leny ? lenx : leny;
-        scale = 1.0f / scale;
+        float den = lenx > leny ? lenx : leny;
+        den = scale / den;
         aspectRatio = lenx / leny;
 
         // Offset and scale to 1.0 so it fits into a [(0, 0) .. (1, 1)] box
@@ -73,24 +74,22 @@ public class LineSoup {
                 segment.end.x -= minx;
                 segment.end.y -= miny;
 
-                segment.start.scl(scale);
-                segment.end.scl(scale);
+                segment.start.scl(den);
+                segment.end.scl(den);
             }
         }
 
         // Do same thing to point of origin and action point
         origin.x -= minx;
         origin.y -= miny;
-        origin.scl(scale);
+        origin.scl(den);
         actionPoint.x -= minx;
         actionPoint.y -= miny;
-        actionPoint.scl(scale);
+        actionPoint.scl(den);
     }
 
     public static LineSoup load(String jsonFile) {
         Json json = new Json();
-        LineSoup lineSoup = json.fromJson(LineSoup.class, Gdx.files.internal(jsonFile));
-        lineSoup.normalise();
-        return lineSoup;
+        return json.fromJson(LineSoup.class, Gdx.files.internal(jsonFile));
     }
 }

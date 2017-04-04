@@ -6,25 +6,35 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import java.util.HashMap;
 
-public class LineEntity extends Actor {
+public class Entity extends Actor {
     private Context context;
+    private LineSoup lineSoup;
     private HashMap<String, TextureRegion> textureRegions;
     private Vector2 actionPoint;
     private boolean doDrawBoundingBoxes = false;
 
-    public LineEntity(Context context) {
+    public Entity(Context context) {
         this.context = context;
     }
 
-    public Context getContext() {
+    protected Context getContext() {
         return context;
     }
 
-    public HashMap<String, TextureRegion> getTextureRegions() {
+    protected LineSoup getLineSoup() {
+        return lineSoup;
+    }
+
+    protected HashMap<String, TextureRegion> getTextureRegions() {
         return textureRegions;
     }
 
@@ -36,13 +46,16 @@ public class LineEntity extends Actor {
         setPosition(position.x, position.y);
     }
 
-
     public Vector2 getDirection() {
         return new Vector2(0, 1).rotate(getRotation());
     }
 
     public Vector2 getActionPoint() {
-        return actionPoint.cpy().sub(getOriginX(), getOriginY()).rotate(getRotation()).add(getX() + getOriginX(), getY() + getOriginY());
+        return actionPoint.cpy()
+                .sub(getOriginX(), getOriginY())
+                .rotate(getRotation())
+                .add(getOriginX(), getOriginY())
+                .add(getX(), getY());
     }
 
     /**
@@ -53,16 +66,17 @@ public class LineEntity extends Actor {
     }
 
     protected void loadLines(String linesFile, int scaleInPixels) {
-        LineSoup lineSoup = LineSoup.load(linesFile);
-        textureRegions = renderPixmaps(lineSoup, scaleInPixels);
+        lineSoup = LineSoup.load(linesFile);
+        lineSoup.rescaleLines(scaleInPixels - 1);
+        textureRegions = renderPixmaps(scaleInPixels);
 
-        Vector2 origin = lineSoup.getOrigin(scaleInPixels);
+        Vector2 origin = lineSoup.getOrigin();
         setOrigin(origin.x, origin.y);
 
-        actionPoint = lineSoup.getActionPoint(scaleInPixels);
+        actionPoint = lineSoup.getActionPoint();
     }
 
-    private HashMap<String, TextureRegion> renderPixmaps(LineSoup lineSoup, int scaleInPixels) {
+    private HashMap<String, TextureRegion> renderPixmaps(int scaleInPixels) {
         // Depending on whether width or height is larger, scale one or the other using the aspect ratio. The result is
         // such that neither the width nor the height will exceed "scaleInPixels" if they are different.
         int width = scaleInPixels;
@@ -72,9 +86,6 @@ public class LineEntity extends Actor {
         } else {
             width *= lineSoup.getAspectRatio();
         }
-
-        // Fix off-by-one error (pixel space is from 0 to N-1, but the line data is from 0 to N)
-        scaleInPixels--;
 
         Pixmap.Format format = Pixmap.Format.RGBA8888;
         HashMap<String, LineSoup.Group> groups = lineSoup.getGroups();
@@ -95,8 +106,8 @@ public class LineEntity extends Actor {
             for (LineSoup.Segment segment : groups.get(groupKey).segments) {
                 // Need to flip Y axis to match the GL coordinate system. Also note off by one fix
                 pixmap.drawLine(
-                        (int)(segment.start.x * scaleInPixels), height - 1 - (int)(segment.start.y * scaleInPixels),
-                        (int)(segment.end.x * scaleInPixels), height - 1 - (int)(segment.end.y * scaleInPixels)
+                        (int)segment.start.x, height - 1 - (int)segment.start.y,
+                        (int)segment.end.x, height - 1 - (int)segment.end.y
                 );
             }
 

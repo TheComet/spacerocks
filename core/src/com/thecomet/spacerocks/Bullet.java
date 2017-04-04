@@ -1,16 +1,16 @@
 package com.thecomet.spacerocks;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 
-public class Bullet extends LineEntity {
+public class Bullet extends EntityPhysics {
     private static final float VELOCITY = 900;
 
-    private Vector2 velocity;
-
-    public static Bullet createBullet(Context context) {
+    public static Bullet createBullet(Context context, Vector2 position, Vector2 direction) {
         Bullet bullet = new Bullet(context);
-        context.stage.addActor(bullet);
+        context.getStage().addActor(bullet);
+        bullet.setPosition(position);
+        bullet.getBody().setLinearVelocity(direction.cpy().scl(VELOCITY));
         return bullet;
     }
 
@@ -18,22 +18,6 @@ public class Bullet extends LineEntity {
         super(context);
 
         loadLines("lines/bullet.json", 12);
-
-        addAction(new Action() {
-            @Override
-            public boolean act(float delta) {
-                updatePosition(delta);
-                return false;
-            }
-        });
-    }
-
-    public void setDirection(Vector2 direction) {
-        velocity = direction.scl(VELOCITY);
-    }
-
-    private void updatePosition(float timeStep) {
-        Vector2 distance = velocity.cpy().scl(timeStep);
-        setPosition(getX() + distance.x, getY() + distance.y);
+        setupPhysics(BodyDef.BodyType.DynamicBody);
     }
 }

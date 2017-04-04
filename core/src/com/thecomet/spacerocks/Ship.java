@@ -3,9 +3,11 @@ package com.thecomet.spacerocks;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Action;
 
-public class Ship extends LineEntity {
+public class Ship extends EntityPhysics {
     private TextureRegion shipTextureRegion;
     private TextureRegion exhaustTextureRegion;
     private ShipControls controls;
@@ -22,8 +24,8 @@ public class Ship extends LineEntity {
 
     public static Ship createLocalPlayer(Context context) {
         Ship ship = new Ship(context);
-        context.stage.addActor(ship);
-        context.stage.setKeyboardFocus(ship);
+        context.getStage().addActor(ship);
+        context.getStage().setKeyboardFocus(ship);
         return ship;
     }
 
@@ -46,6 +48,8 @@ public class Ship extends LineEntity {
         loadLines("lines/ship.json", 32);
         shipTextureRegion = getTextureRegions().get("ship");
         exhaustTextureRegion = getTextureRegions().get("exhaust");
+
+        setupPhysics(BodyDef.BodyType.KinematicBody);
     }
 
     private void setupControls() {
@@ -66,7 +70,6 @@ public class Ship extends LineEntity {
                 processShooting();
                 updateRotation(delta);
                 updateVelocity(delta);
-                updatePosition();
                 return false;
             }
         });
@@ -75,17 +78,9 @@ public class Ship extends LineEntity {
     private void processShooting() {
         if (controls.getShoot()) {
             Vector2 direction = getDirection();
-
-            Bullet bullet = Bullet.createBullet(getContext());
-            bullet.setPosition(getActionPoint());
-            bullet.setDirection(direction);
-
+            Bullet bullet = Bullet.createBullet(getContext(), getActionPoint(), direction);
             velocity.mulAdd(direction, -RECOIL_FORCE);
         }
-    }
-
-    private void updatePosition() {
-        setPosition(getX() + velocity.x, getY() + velocity.y);
     }
 
     private void updateVelocity(float timeStep) {
@@ -98,13 +93,16 @@ public class Ship extends LineEntity {
         }
 
         velocity.clamp(0, MAX_VELOCITY);
+        getBody().setLinearVelocity(velocity);
     }
 
     private void updateRotation(float timeStep) {
+        Body body = getBody();
+        Vector2 pos = body.getPosition();
         if (controls.getTurnLeft()) {
-            setRotation(getRotation() + timeStep * ROTATION_SPEED);
+            body.setTransform(pos.x, pos.y, body.getAngle() + timeStep * ROTATION_SPEED);
         } else if (controls.getTurnRight()) {
-            setRotation(getRotation() - timeStep * ROTATION_SPEED);
+            body.setTransform(pos.x, pos.y, body.getAngle() - timeStep * ROTATION_SPEED);
         }
     }
 
