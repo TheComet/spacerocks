@@ -1,18 +1,13 @@
 package com.thecomet.spacerocks;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
 
-public class Lines {
+public class LineSoup {
     private HashMap<String, Group> groups = new HashMap<String, Group>();
     private Vector2 origin = new Vector2(0, 0);
     private Vector2 actionPoint = new Vector2(0, 0);
@@ -92,10 +87,10 @@ public class Lines {
         actionPoint.scl(scale);
     }
 
-    public static Lines load(String jsonFile) {
+    public static LineSoup load(String jsonFile) {
         Json json = new Json();
-        Lines lines = json.fromJson(Lines.class, Gdx.files.internal(jsonFile));
-        lines.normalise();
-        return lines;
+        LineSoup lineSoup = json.fromJson(LineSoup.class, Gdx.files.internal(jsonFile));
+        lineSoup.normalise();
+        return lineSoup;
     }
 }

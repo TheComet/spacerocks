@@ -1,11 +1,10 @@
 package com.thecomet.spacerocks;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class SmallAsteroid extends Asteroid {
-    public SmallAsteroid(SpaceRocks spaceRocks) {
-        super(spaceRocks);
+    public SmallAsteroid(Context context) {
+        super(context);
     }
 
     @Override

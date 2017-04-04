@@ -5,8 +5,8 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 
 public class HugeAsteroid extends Asteroid {
 
-    public HugeAsteroid(SpaceRocks spaceRocks) {
-        super(spaceRocks);
+    public HugeAsteroid(Context context) {
+        super(context);
         createActions();
         loadLines("lines/huge_asteroid.json", 80);
         setPosition(100, 100);

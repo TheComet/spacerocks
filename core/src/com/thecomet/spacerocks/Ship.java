@@ -20,8 +20,25 @@ public class Ship extends LineEntity {
 
     private Vector2 velocity = new Vector2();
 
-    public Ship(SpaceRocks spaceRocks) {
-        super(spaceRocks);
+    public static Ship createLocalPlayer(Context context) {
+        Ship ship = new Ship(context);
+        context.stage.addActor(ship);
+        context.stage.setKeyboardFocus(ship);
+        return ship;
+    }
+
+    public static Ship createNetworkedPlayer(Context context) {
+        // TODO ???
+        return null;
+    }
+
+    public static Ship createAIPlayer(Context context) {
+        // TODO ???
+        return null;
+    }
+
+    public Ship(Context context) {
+        super(context);
 
         setupControls();
         createActions();
@@ -59,7 +76,7 @@ public class Ship extends LineEntity {
         if (controls.getShoot()) {
             Vector2 direction = getDirection();
 
-            Bullet bullet = getSpaceRocks().createBullet();
+            Bullet bullet = Bullet.createBullet(getContext());
             bullet.setPosition(getActionPoint());
             bullet.setDirection(direction);
 

@@ -11,25 +11,28 @@ public abstract class Asteroid extends LineEntity {
     private float turnSpeed;
     private Vector2 velocity = new Vector2();
 
-    enum AsteroidClass {
+    enum Type {
         TINY,
         SMALL,
         KINDALARGE,
         HUGE
     }
 
-    public static Asteroid createAsteroid(SpaceRocks spaceRocks, AsteroidClass asteroidClass) {
-        switch (asteroidClass) {
-            case TINY: return new TinyAsteroid(spaceRocks);
-            case SMALL: return new HugeAsteroid(spaceRocks);
-            case KINDALARGE: return new KindaLargeAsteroid(spaceRocks);
-            case HUGE: return new HugeAsteroid(spaceRocks);
+    public static Asteroid createAsteroid(Context context, Type type) {
+        Asteroid asteroid;
+        switch (type) {
+            case TINY:       asteroid = new TinyAsteroid(context); break;
+            case SMALL:      asteroid = new HugeAsteroid(context); break;
+            case KINDALARGE: asteroid = new KindaLargeAsteroid(context); break;
+            case HUGE:       asteroid = new HugeAsteroid(context); break;
+            default: throw new RuntimeException("Unhandled asteroid type creation");
         }
-        return null;
+        context.stage.addActor(asteroid);
+        return asteroid;
     }
 
-    public Asteroid(SpaceRocks spaceRocks) {
-        super(spaceRocks);
+    public Asteroid(Context context) {
+        super(context);
         turnSpeed = getRandomTurnSpeed();
         velocity = getRandomVelocity();
     }

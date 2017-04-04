@@ -8,8 +8,14 @@ public class Bullet extends LineEntity {
 
     private Vector2 velocity;
 
-    public Bullet(SpaceRocks spaceRocks) {
-        super(spaceRocks);
+    public static Bullet createBullet(Context context) {
+        Bullet bullet = new Bullet(context);
+        context.stage.addActor(bullet);
+        return bullet;
+    }
+
+    public Bullet(Context context) {
+        super(context);
 
         loadLines("lines/bullet.json", 12);
 

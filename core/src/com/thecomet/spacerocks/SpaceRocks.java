@@ -9,40 +9,26 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class SpaceRocks extends ApplicationAdapter {
-    private Stage stage;
-    private World world;
+    private Context context;
 
     private float physicsTimeAccumulator = 0;
     private final static float PHYSICS_DT = 1.0f / 45;
 
-    public Ship createShip() {
-        Ship ship = new Ship(this);
-        stage.addActor(ship);
-        stage.setKeyboardFocus(ship);
-        return ship;
-    }
-
-    public Bullet createBullet() {
-        Bullet bullet = new Bullet(this);
-        stage.addActor(bullet);
-        return bullet;
-    }
-
     @Override
     public void create() {
-        stage = new Stage(new ScreenViewport());
-        stage.getViewport().setScreenSize(1366, 768);
-        Gdx.input.setInputProcessor(stage);
+        context = new Context();
+        Gdx.input.setInputProcessor(context.stage);
 
-        stage.addActor(Asteroid.createAsteroid(this, Asteroid.AsteroidClass.HUGE));
-        createShip();
+        Asteroid asteroid = Asteroid.createAsteroid(context, Asteroid.Type.HUGE);
+        asteroid.setPosition(200, 200);
 
-        world = new World(new Vector2(0, 0), true);
+        Ship ship = Ship.createLocalPlayer(context);
+        ship.setPosition(50, 50);
     }
 
     @Override
     public void resize(int width, int height) {
-        stage.getViewport().update(width, height);
+        context.stage.getViewport().update(width, height);
     }
 
     @Override
@@ -52,7 +38,7 @@ public class SpaceRocks extends ApplicationAdapter {
         stepLogic(delta);
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.draw();
+        context.stage.draw();
     }
 
     private void stepPhysics(float delta) {
@@ -62,17 +48,17 @@ public class SpaceRocks extends ApplicationAdapter {
         // fixed time step, as explained here http://gafferongames.com/game-physics/fix-your-timestep/
         physicsTimeAccumulator += frameTime;
         while (physicsTimeAccumulator >= PHYSICS_DT) {
-            world.step(PHYSICS_DT, 6, 2);
+            context.world.step(PHYSICS_DT, 6, 2);
             physicsTimeAccumulator -= PHYSICS_DT;
         }
     }
 
     private void stepLogic(float delta) {
-        stage.act(delta);
+        context.stage.act(delta);
     }
     
     @Override
     public void dispose() {
-        stage.dispose();
+        context.dispose();
     }
 }

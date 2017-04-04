@@ -11,17 +11,17 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import java.util.HashMap;
 
 public class LineEntity extends Actor {
-    private SpaceRocks spaceRocks;
+    private Context context;
     private HashMap<String, TextureRegion> textureRegions;
     private Vector2 actionPoint;
     private boolean doDrawBoundingBoxes = false;
 
-    public LineEntity(SpaceRocks spaceRocks) {
-        this.spaceRocks = spaceRocks;
+    public LineEntity(Context context) {
+        this.context = context;
     }
 
-    public SpaceRocks getSpaceRocks() {
-        return spaceRocks;
+    public Context getContext() {
+        return context;
     }
 
     public HashMap<String, TextureRegion> getTextureRegions() {
@@ -53,31 +53,31 @@ public class LineEntity extends Actor {
     }
 
     protected void loadLines(String linesFile, int scaleInPixels) {
-        Lines lines = Lines.load(linesFile);
-        textureRegions = renderPixmaps(lines, scaleInPixels);
+        LineSoup lineSoup = LineSoup.load(linesFile);
+        textureRegions = renderPixmaps(lineSoup, scaleInPixels);
 
-        Vector2 origin = lines.getOrigin(scaleInPixels);
+        Vector2 origin = lineSoup.getOrigin(scaleInPixels);
         setOrigin(origin.x, origin.y);
 
-        actionPoint = lines.getActionPoint(scaleInPixels);
+        actionPoint = lineSoup.getActionPoint(scaleInPixels);
     }
 
-    private HashMap<String, TextureRegion> renderPixmaps(Lines lines, int scaleInPixels) {
+    private HashMap<String, TextureRegion> renderPixmaps(LineSoup lineSoup, int scaleInPixels) {
         // Depending on whether width or height is larger, scale one or the other using the aspect ratio. The result is
         // such that neither the width nor the height will exceed "scaleInPixels" if they are different.
         int width = scaleInPixels;
         int height = scaleInPixels;
-        if (lines.getAspectRatio() > 1.0f) {
-            height /= lines.getAspectRatio();
+        if (lineSoup.getAspectRatio() > 1.0f) {
+            height /= lineSoup.getAspectRatio();
         } else {
-            width *= lines.getAspectRatio();
+            width *= lineSoup.getAspectRatio();
         }
 
         // Fix off-by-one error (pixel space is from 0 to N-1, but the line data is from 0 to N)
         scaleInPixels--;
 
         Pixmap.Format format = Pixmap.Format.RGBA8888;
-        HashMap<String, Lines.Group> groups = lines.getGroups();
+        HashMap<String, LineSoup.Group> groups = lineSoup.getGroups();
         HashMap<String, TextureRegion> regions = new HashMap<>();
         Texture texture = new Texture(width * groups.size(), height, format);
 
@@ -92,7 +92,8 @@ public class LineEntity extends Actor {
             pixmap.setFilter(Pixmap.Filter.BiLinear);
             pixmap.setBlending(Pixmap.Blending.None);
 
-            for (Lines.Segment segment : groups.get(groupKey).segments) {
+            for (LineSoup.Segment segment : groups.get(groupKey).segments) {
+                // Need to flip Y axis to match the GL coordinate system. Also note off by one fix
                 pixmap.drawLine(
                         (int)(segment.start.x * scaleInPixels), height - 1 - (int)(segment.start.y * scaleInPixels),
                         (int)(segment.end.x * scaleInPixels), height - 1 - (int)(segment.end.y * scaleInPixels)
