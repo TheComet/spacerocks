@@ -1,15 +1,11 @@
 package com.thecomet.spacerocks;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 
-import java.util.HashMap;
-
-public class Ship extends Actor {
+public class Ship extends LineEntity {
     private TextureRegion shipTextureRegion;
     private TextureRegion exhaustTextureRegion;
     private ShipControls controls;
@@ -17,7 +13,7 @@ public class Ship extends Actor {
     private static final float ROTATION_SPEED = 100;
     private static final float ACCELERATION = 10;
     private static final float MAX_VELOCITY = 5;
-    private static final float RECOIL_FORCE = 0.1f;
+    private static final float RECOIL_FORCE = 0.001f;
 
     private float exhaustTimer = 0;
     private boolean doDrawExhaust = false;
@@ -26,8 +22,11 @@ public class Ship extends Actor {
 
     public Ship() {
         setupControls();
-        loadTextures();
         createActions();
+
+        loadLines("lines/ship.json", 32);
+        shipTextureRegion = textureRegions.get("ship");
+        exhaustTextureRegion = textureRegions.get("exhaust");
     }
 
     private void setupControls() {
@@ -35,19 +34,6 @@ public class Ship extends Actor {
         controls = new ShipControls();
         ShipInputMapper inputMapper = new ShipInputMapper(controls);
         addListener(inputMapper);
-    }
-
-    private void loadTextures() {
-        int shipScale = 32;
-
-        Lines lines = Lines.load("lines/ship.json");
-        HashMap<String, TextureRegion> regions = lines.renderToTextures(shipScale);
-
-        shipTextureRegion = regions.get("ship");
-        exhaustTextureRegion = regions.get("exhaust");
-
-        Vector2 origin = lines.calculateOrigin(shipScale);
-        setOrigin(origin.x, origin.y);
     }
 
     private void createActions() {
@@ -68,11 +54,13 @@ public class Ship extends Actor {
     }
 
     private void processShooting() {
-        Vector2 direction = calculateDirection();
         if (controls.getShoot()) {
-            velocity.mulAdd(direction, -RECOIL_FORCE);
-            Bullet bullet = new Bullet(new Vector2(getX(), getY()), direction);
+            Vector2 direction = getDirection();
+            Vector2 spawnPoint = getActionPoint();
+            Bullet bullet = new Bullet(spawnPoint, direction);
             getStage().addActor(bullet);
+
+            velocity.mulAdd(direction, -RECOIL_FORCE);
         }
     }
 
@@ -82,7 +70,7 @@ public class Ship extends Actor {
 
     private void updateVelocity(float timeStep) {
         if (controls.getAccelerate()) {
-            Vector2 direction = calculateDirection();
+            Vector2 direction = getDirection();
             velocity.mulAdd(direction, timeStep * ACCELERATION);
             updateExhaustFlicker(timeStep, false);
         } else {
@@ -90,10 +78,6 @@ public class Ship extends Actor {
         }
 
         velocity.clamp(0, MAX_VELOCITY);
-    }
-
-    private Vector2 calculateDirection() {
-        return new Vector2(0, 1).rotate(getRotation());
     }
 
     private void updateRotation(float timeStep) {
@@ -119,13 +103,9 @@ public class Ship extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.draw(shipTextureRegion, getX(), getY(), getOriginX(), getOriginY(),
-                shipTextureRegion.getRegionWidth(), shipTextureRegion.getRegionHeight(),
-                1, 1, getRotation());
+        drawTextureRegion(batch, shipTextureRegion);
         if (doDrawExhaust) {
-            batch.draw(exhaustTextureRegion, getX(), getY(), getOriginX(), getOriginY(),
-                    exhaustTextureRegion.getRegionWidth(), exhaustTextureRegion.getRegionHeight(),
-                    1, 1, getRotation());
+            drawTextureRegion(batch, exhaustTextureRegion);
         }
     }
 }

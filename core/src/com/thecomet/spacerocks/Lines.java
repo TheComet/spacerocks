@@ -13,9 +13,9 @@ import java.util.HashMap;
 import java.util.Set;
 
 public class Lines {
-    public HashMap<String, Group> groups = new HashMap<String, Group>();
-
-    private Vector2 origin;
+    private HashMap<String, Group> groups = new HashMap<String, Group>();
+    private Vector2 origin = new Vector2(0, 0);
+    private Vector2 actionPoint = new Vector2(0, 0);
     private float aspectRatio;
 
     public static class Segment {
@@ -27,45 +27,20 @@ public class Lines {
         public ArrayList<Segment> segments = new ArrayList<Segment>();
     }
 
-    public HashMap<String, TextureRegion> renderToTextures(int scaleInPixels) {
-        int width = scaleInPixels;
-        int height = scaleInPixels;
-        if (aspectRatio > 1.0f) {
-            height /= aspectRatio;
-        } else {
-            width *= aspectRatio;
-        }
-
-        Pixmap.Format format = Pixmap.Format.RGBA8888;
-        HashMap<String, TextureRegion> regions = new HashMap<>();
-        Texture texture = new Texture(width * groups.size(), height, format);
-
-        int i = 0;
-        for (String groupKey : groups.keySet()) {
-            Pixmap pixmap = new Pixmap(width, height, format);
-            pixmap.setColor(Color.WHITE);
-            pixmap.setFilter(Pixmap.Filter.BiLinear);
-            pixmap.setBlending(Pixmap.Blending.None);
-
-            for (Segment segment : groups.get(groupKey).segments) {
-                pixmap.drawLine(
-                        (int)(segment.start.x * scaleInPixels), height - (int)(segment.start.y * scaleInPixels),
-                        (int)(segment.end.x * scaleInPixels), height - (int)(segment.end.y * scaleInPixels)
-                );
-            }
-
-            texture.draw(pixmap, width * i, 0);
-            regions.put(groupKey, new TextureRegion(texture, i * width, 0, width, height));
-
-            pixmap.dispose();
-            i++;
-        }
-
-        return regions;
+    public HashMap<String, Group> getGroups() {
+        return groups;
     }
 
-    public Vector2 calculateOrigin(float scaleInPixels) {
+    public Vector2 getOrigin(float scaleInPixels) {
         return origin.cpy().scl(scaleInPixels);
+    }
+
+    public Vector2 getActionPoint(float scaleInPixels) {
+        return actionPoint.cpy().scl(scaleInPixels);
+    }
+
+    public float getAspectRatio() {
+        return aspectRatio;
     }
 
     private void normalise() {
@@ -103,18 +78,18 @@ public class Lines {
                 segment.end.x -= minx;
                 segment.end.y -= miny;
 
-                segment.start.x *= scale;
-                segment.start.y *= scale;
-                segment.end.x *= scale;
-                segment.end.y *= scale;
+                segment.start.scl(scale);
+                segment.end.scl(scale);
             }
         }
 
-        // Do same thing to point of origin
+        // Do same thing to point of origin and action point
         origin.x -= minx;
         origin.y -= miny;
-        origin.x *= scale;
-        origin.y *= scale;
+        origin.scl(scale);
+        actionPoint.x -= minx;
+        actionPoint.y -= miny;
+        actionPoint.scl(scale);
     }
 
     public static Lines load(String jsonFile) {
