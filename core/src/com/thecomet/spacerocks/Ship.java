@@ -7,14 +7,14 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.scenes.scene2d.Action;
 
-public class Ship extends EntityPhysics {
+public class Ship extends PhysicsEntity {
     private TextureRegion shipTextureRegion;
     private TextureRegion exhaustTextureRegion;
     private ShipControls controls;
 
     private static final float ROTATION_SPEED = 200;
-    private static final float ACCELERATION = 10;
-    private static final float MAX_VELOCITY = 5;
+    private static final float ACCELERATION = 200;
+    private static final float MAX_VELOCITY = 200;
     private static final float RECOIL_FORCE = 0.0002f;
 
     private float exhaustTimer = 0;
@@ -24,8 +24,8 @@ public class Ship extends EntityPhysics {
 
     public static Ship createLocalPlayer(Context context) {
         Ship ship = new Ship(context);
-        context.getStage().addActor(ship);
-        context.getStage().setKeyboardFocus(ship);
+        context.stage.addActor(ship);
+        context.stage.setKeyboardFocus(ship);
         return ship;
     }
 
@@ -70,6 +70,7 @@ public class Ship extends EntityPhysics {
                 processShooting();
                 updateRotation(delta);
                 updateVelocity(delta);
+                updatePosition(delta);
                 return false;
             }
         });
@@ -78,8 +79,16 @@ public class Ship extends EntityPhysics {
     private void processShooting() {
         if (controls.getShoot()) {
             Vector2 direction = getDirection();
-            Bullet bullet = Bullet.createBullet(getContext(), getActionPoint(), direction);
+            Bullet.createBullet(getContext(), getActionPoint(), direction);
             velocity.mulAdd(direction, -RECOIL_FORCE);
+        }
+    }
+
+    private void updateRotation(float timeStep) {
+        if (controls.getTurnLeft()) {
+            setRotation(getRotation() + timeStep * ROTATION_SPEED);
+        } else if (controls.getTurnRight()) {
+            setRotation(getRotation() - timeStep * ROTATION_SPEED);
         }
     }
 
@@ -93,17 +102,10 @@ public class Ship extends EntityPhysics {
         }
 
         velocity.clamp(0, MAX_VELOCITY);
-        getBody().setLinearVelocity(velocity);
     }
 
-    private void updateRotation(float timeStep) {
-        Body body = getBody();
-        Vector2 pos = body.getPosition();
-        if (controls.getTurnLeft()) {
-            body.setTransform(pos.x, pos.y, body.getAngle() + timeStep * ROTATION_SPEED);
-        } else if (controls.getTurnRight()) {
-            body.setTransform(pos.x, pos.y, body.getAngle() - timeStep * ROTATION_SPEED);
-        }
+    private void updatePosition(float delta) {
+        setPosition(getX() + velocity.x * delta, getY() + velocity.y * delta);
     }
 
     private void updateExhaustFlicker(float timeStep, boolean reset) {

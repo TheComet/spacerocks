@@ -8,6 +8,7 @@
       ]
     },
     "exhaust": {
+      "physics": false,
       "segments": [
         {"start": {"x": -3, "y": -18}, "end": {"x": 0, "y": -26}},
         {"start": {"x": 3, "y": -18}, "end": {"x": 0, "y": -26}}

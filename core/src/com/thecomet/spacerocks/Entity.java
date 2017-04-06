@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -36,10 +37,6 @@ public class Entity extends Actor {
 
     protected HashMap<String, TextureRegion> getTextureRegions() {
         return textureRegions;
-    }
-
-    public Vector2 getPosition() {
-        return new Vector2(getX(), getY());
     }
 
     public void setPosition(Vector2 position) {

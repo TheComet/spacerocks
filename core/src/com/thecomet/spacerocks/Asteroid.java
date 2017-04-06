@@ -2,7 +2,7 @@ package com.thecomet.spacerocks;
 
 import com.badlogic.gdx.math.Vector2;
 
-public abstract class Asteroid extends EntityPhysics {
+abstract class Asteroid extends PhysicsEntity {
     private static final float MAX_ROTATION_SPEED = 100;
     private static final float MIN_ROTATION_SPEED = -100;
     private static final float MIN_SPEED = 10;
@@ -25,7 +25,7 @@ public abstract class Asteroid extends EntityPhysics {
             default: throw new RuntimeException("Unhandled asteroid type creation");
         }
 
-        context.getStage().addActor(asteroid);
+        context.stage.addActor(asteroid);
         return asteroid;
     }
 
