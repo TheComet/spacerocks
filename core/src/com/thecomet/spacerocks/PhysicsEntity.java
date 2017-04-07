@@ -4,8 +4,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Action;
 
-public class PhysicsEntity extends Entity {
-    private final static float WORLD_SCALE = 10.0f;
+public abstract class PhysicsEntity extends Entity {
+    private final static float WORLD_SCALE = 10;
+    private final static float LINE_THICKNESS = 2;
+
+    private final static int MASK_PLAYER = 0x01;
+    private final static int MASK_ENTITY = 0x02;
+    private final static int MASK_BULLET = 0x04;
+
     private Body body;
 
     public PhysicsEntity(Context context) {
@@ -17,30 +23,33 @@ public class PhysicsEntity extends Entity {
         createSynchronisationActions(bodyType);
     }
 
+    protected abstract void configureFixture(FixtureDef fixtureDef);
+
     private void createPhysicsFixtures(BodyDef.BodyType bodyType) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = bodyType;
         bodyDef.position.set(getX() / WORLD_SCALE, getY() / WORLD_SCALE);
         body = getContext().world.createBody(bodyDef);
 
-        MassData massData = new MassData();
-        massData.mass = 5;
-        body.setMassData(massData);
-
         for (LineSoup.Group group : getLineSoup().getGroups().values()) {
             if (!group.physics) {
                 continue;
             }
             for (LineSoup.Segment segment : group.segments) {
-                EdgeShape shape = new EdgeShape();
-                shape.set(segment.start.cpy().sub(getOriginX(), getOriginY()).scl(1.0f / WORLD_SCALE),
-                          segment.end.cpy().sub(getOriginX(), getOriginY()).scl(1.0f / WORLD_SCALE));
+                Vector2 start = segment.start.cpy().sub(getOriginX(), getOriginY()).scl(1.0f / WORLD_SCALE);
+                Vector2 end = segment.end.cpy().sub(getOriginX(), getOriginY()).scl(1.0f / WORLD_SCALE);
+                Vector2 line = end.cpy().sub(start);
+                Vector2 center = line.cpy().scl(0.5f).add(start);
+                float len = line.len() * 0.5f;
+                float angle = (new Vector2(1, 0)).angle(line);
+                final float thickness = LINE_THICKNESS / WORLD_SCALE;
+
+                PolygonShape shape = new PolygonShape();
+                shape.setAsBox(len, thickness, center, angle * (float)Math.PI / 180.0f);
 
                 FixtureDef fixtureDef = new FixtureDef();
                 fixtureDef.shape = shape;
-                fixtureDef.density = 0.5f;
-                fixtureDef.friction = 0.4f;
-                fixtureDef.restitution = 0.6f;
+                configureFixture(fixtureDef);
                 body.createFixture(fixtureDef);
 
                 shape.dispose();
