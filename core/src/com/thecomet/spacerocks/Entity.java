@@ -7,16 +7,12 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.EdgeShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import java.util.HashMap;
 
 public class Entity extends Actor {
+    private ShapeRenderer shapeRenderer = new ShapeRenderer();
     private Context context;
     private LineSoup lineSoup;
     private HashMap<String, TextureRegion> textureRegions;
@@ -129,5 +125,19 @@ public class Entity extends Actor {
         for (TextureRegion region : textureRegions.values()) {
             drawTextureRegion(batch, region);
         }
+        batch.end();
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setProjectionMatrix(getContext().stage.getCamera().combined);
+        shapeRenderer.setColor(1, 0, 0, 1);
+        Vector2 p = getActionPoint();
+        shapeRenderer.circle(p.x, p.y, 3);
+        p = new Vector2(getX(), getY());
+        shapeRenderer.setColor(0, 1, 0, 1);
+        shapeRenderer.circle(p.x, p.y, 3);
+        p = new Vector2(getX() + getOriginX(), getY() + getOriginY());
+        shapeRenderer.setColor(0, 0.4f, 1, 1);
+        shapeRenderer.circle(p.x, p.y, 3);
+        shapeRenderer.end();
+        batch.begin();
     }
 }

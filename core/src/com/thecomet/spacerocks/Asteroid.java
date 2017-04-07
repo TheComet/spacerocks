@@ -44,8 +44,9 @@ abstract class Asteroid extends PhysicsEntity {
 
     @Override
     protected void configureFixture(FixtureDef fixtureDef) {
-        fixtureDef.density = 0.1f;
+        fixtureDef.density = 0.3f;
         fixtureDef.friction = 0.4f;
         fixtureDef.restitution = 0.6f;
+        fixtureDef.filter.categoryBits = PhysicsEntity.MASK_ENTITY;
     }
 }

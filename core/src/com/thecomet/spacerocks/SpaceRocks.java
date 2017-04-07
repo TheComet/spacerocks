@@ -51,7 +51,7 @@ public class SpaceRocks extends ApplicationAdapter {
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         context.stage.draw();
-        debugRenderer.render(context.world, context.stage.getCamera().combined);
+        debugRenderer.render(context.world, context.stage.getCamera().combined.scl(PhysicsEntity.WORLD_SCALE));
     }
 
     private void stepPhysics(float delta) {

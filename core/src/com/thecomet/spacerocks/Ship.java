@@ -2,6 +2,7 @@ package com.thecomet.spacerocks;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -58,6 +59,8 @@ public class Ship extends PhysicsEntity {
         fixtureDef.density = 0.5f;
         fixtureDef.friction = 0.4f;
         fixtureDef.restitution = 0.6f;
+        fixtureDef.filter.categoryBits = PhysicsEntity.MASK_PLAYER;
+        fixtureDef.filter.maskBits = PhysicsEntity.MASK_BULLET;
     }
 
     private void setupControls() {
@@ -131,6 +134,7 @@ public class Ship extends PhysicsEntity {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        super.draw(batch, parentAlpha);
         drawTextureRegion(batch, shipTextureRegion);
         if (doDrawExhaust) {
             drawTextureRegion(batch, exhaustTextureRegion);

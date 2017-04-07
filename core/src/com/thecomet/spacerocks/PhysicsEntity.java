@@ -5,12 +5,12 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Action;
 
 public abstract class PhysicsEntity extends Entity {
-    private final static float WORLD_SCALE = 10;
+    public final static float WORLD_SCALE = 50;
     private final static float LINE_THICKNESS = 2;
 
-    private final static int MASK_PLAYER = 0x01;
-    private final static int MASK_ENTITY = 0x02;
-    private final static int MASK_BULLET = 0x04;
+    public final static short MASK_PLAYER = 0x01;
+    public final static short MASK_ENTITY = 0x02;
+    public final static short MASK_BULLET = 0x04;
 
     private Body body;
 
@@ -36,8 +36,8 @@ public abstract class PhysicsEntity extends Entity {
                 continue;
             }
             for (LineSoup.Segment segment : group.segments) {
-                Vector2 start = segment.start.cpy().sub(getOriginX(), getOriginY()).scl(1.0f / WORLD_SCALE);
-                Vector2 end = segment.end.cpy().sub(getOriginX(), getOriginY()).scl(1.0f / WORLD_SCALE);
+                Vector2 start = segment.start.cpy().sub(getLineSoup().getOrigin()).scl(1.0f / WORLD_SCALE);
+                Vector2 end = segment.end.cpy().sub(getLineSoup().getOrigin()).scl(1.0f / WORLD_SCALE);
                 Vector2 line = end.cpy().sub(start);
                 Vector2 center = line.cpy().scl(0.5f).add(start);
                 float len = line.len() * 0.5f;
