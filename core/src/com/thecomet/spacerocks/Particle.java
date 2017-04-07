@@ -46,6 +46,6 @@ public class Particle extends PhysicsEntity {
         fixtureDef.friction = 0.0f;
         fixtureDef.density = 0.01f;
         fixtureDef.filter.categoryBits = MASK_PARTICLE;
-        fixtureDef.filter.maskBits = MASK_PARTICLE;
+        fixtureDef.filter.maskBits = ~MASK_PARTICLE;
     }
 }
