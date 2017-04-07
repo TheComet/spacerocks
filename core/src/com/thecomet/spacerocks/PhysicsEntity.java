@@ -1,5 +1,6 @@
 package com.thecomet.spacerocks;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -12,6 +13,7 @@ public abstract class PhysicsEntity extends Entity implements Disposable {
     public final static short MASK_PLAYER = 0x01;
     public final static short MASK_ENTITY = 0x02;
     public final static short MASK_BULLET = 0x04;
+    public final static short MASK_PARTICLE = 0x08;
 
     private Body body;
 
@@ -100,6 +102,16 @@ public abstract class PhysicsEntity extends Entity implements Disposable {
 
     public void setAngularVelocity(float omega) {
         body.setAngularVelocity(omega * (float)Math.PI / 180.0f);
+    }
+
+    public Vector2 getRandomVelocity(float min, float max) {
+        return new Vector2(1, 0)
+                .rotate((float)Math.random() * 360.0f)
+                .scl((float) (Math.random() * (max - min)) + min);
+    }
+
+    public float getRandomTurnSpeed(float min, float max) {
+        return (float) (Math.random() * (max - min)) + min;
     }
 
     private void setBodyPosition(float x, float y) {

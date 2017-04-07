@@ -1,0 +1,9 @@
+{
+  "groups": {
+    "particle": {
+      "segments": [
+        {"start": {"x": -1, "y": 0}, "end": {"x": 1, "y": 0}}
+      ]
+    }
+  }
+}

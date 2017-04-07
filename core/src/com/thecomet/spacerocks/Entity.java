@@ -58,10 +58,10 @@ public class Entity extends Actor {
         doDrawBoundingBoxes = enable;
     }
 
-    protected void loadLines(String linesFile, int scaleInPixels) {
+    protected void loadLines(String linesFile, float scaleInPixels) {
         lineSoup = LineSoup.load(linesFile);
         lineSoup.rescaleLines(scaleInPixels - 1);
-        textureRegions = renderPixmaps(scaleInPixels);
+        textureRegions = renderPixmaps((int)scaleInPixels);
 
         Vector2 origin = lineSoup.getOrigin();
         setOrigin(origin.x, origin.y);

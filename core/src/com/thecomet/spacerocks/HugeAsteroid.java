@@ -9,7 +9,7 @@ public class HugeAsteroid extends Asteroid {
         loadLines("lines/huge_asteroid.json", 80);
         setupPhysics(BodyDef.BodyType.DynamicBody);
         setPosition(100, 100);
-        setLinearVelocity(getRandomVelocity());
-        setAngularVelocity(getRandomTurnSpeed());
+        setLinearVelocity(getRandomVelocity(5, 20));
+        setAngularVelocity(getRandomTurnSpeed(-100, 100));
     }
 }

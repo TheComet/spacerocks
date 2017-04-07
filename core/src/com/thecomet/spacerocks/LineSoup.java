@@ -39,7 +39,7 @@ public class LineSoup {
         return aspectRatio;
     }
 
-    public void rescaleLines(int scale) {
+    public void rescaleLines(float scale) {
         float minx = Float.MAX_VALUE;
         float maxx = -Float.MIN_VALUE;
         float miny = Float.MAX_VALUE;

@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 
 public class Bullet extends PhysicsEntity {
     private static final float VELOCITY = 800;
-    private float life = 1.4f;
+    private float life = 0.5f;
 
     public static Bullet createBullet(Context context, Vector2 position, Vector2 direction) {
         Bullet bullet = new Bullet(context);
@@ -28,6 +28,7 @@ public class Bullet extends PhysicsEntity {
             public boolean act(float delta) {
                 life -= delta;
                 if (life <= 0) {
+                    Particle.createExplosion(getContext(), new Vector2(getX(), getY()), 400, 50);
                     remove();
                 }
                 return false;
