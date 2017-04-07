@@ -3,10 +3,11 @@ package com.thecomet.spacerocks;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.utils.Disposable;
 
-public abstract class PhysicsEntity extends Entity {
+public abstract class PhysicsEntity extends Entity implements Disposable {
     public final static float WORLD_SCALE = 50;
-    private final static float LINE_THICKNESS = 2;
+    private final static float LINE_THICKNESS = 3;
 
     public final static short MASK_PLAYER = 0x01;
     public final static short MASK_ENTITY = 0x02;
@@ -123,5 +124,21 @@ public abstract class PhysicsEntity extends Entity {
     private void setActorRotation(float angle) {
         Entity entity = PhysicsEntity.this;
         entity.setRotation(angle * 180.0f / (float)Math.PI);
+    }
+
+    /**
+     * When the actor gets removed from the stage, Box2D entities will still remain in the world. We have to remove
+     * them by calling dispose(). Override the call to remove() and insert our cleanup code here.
+     * @return
+     */
+    @Override
+    public boolean remove() {
+        dispose();
+        return super.remove();
+    }
+
+    @Override
+    public void dispose() {
+        getContext().world.destroyBody(body);
     }
 }
