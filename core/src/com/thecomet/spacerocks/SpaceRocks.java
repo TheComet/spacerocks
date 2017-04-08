@@ -25,6 +25,7 @@ public class SpaceRocks extends ApplicationAdapter {
         context = new Context();
         context.world = new World(new Vector2(0, 0), true);
         context.stage = new Stage();
+        context.graphicsUtil = new GraphicsUtil();
 
         Camera camera = new OrthographicCamera();
         Viewport viewport = new ScreenViewport(camera);
@@ -88,8 +89,9 @@ public class SpaceRocks extends ApplicationAdapter {
     }
 
     private void preDraw() {
+        PreDrawEvent event = new PreDrawEvent();
         for (Actor actor : context.stage.getActors()) {
-            actor.fire(new PreDrawEvent());
+            actor.fire(event);
         }
     }
 

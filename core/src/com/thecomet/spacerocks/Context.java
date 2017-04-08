@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Disposable;
 public class Context implements Disposable {
     public Stage stage;
     public World world;
+    public IGraphicsUtil graphicsUtil;
 
     @Override
     public void dispose() {
