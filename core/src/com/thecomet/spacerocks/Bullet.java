@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 
 public class Bullet extends PhysicsEntity {
     private static final float VELOCITY = 800;
-    private float life = 0.5f;
+    private float life = 0.8f;
 
     public static Bullet createBullet(Context context, Vector2 position, Vector2 direction) {
         Bullet bullet = new Bullet(context);
@@ -21,7 +21,7 @@ public class Bullet extends PhysicsEntity {
         super(context);
 
         loadLines("lines/bullet.json", 5);
-        setupPhysics(BodyDef.BodyType.DynamicBody);
+        setupPhysics();
 
         addAction(new Action() {
             @Override
@@ -37,10 +37,16 @@ public class Bullet extends PhysicsEntity {
     }
 
     @Override
+    protected void configureBody(BodyDef bodyDef) {
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+    }
+
+    @Override
     protected void configureFixture(FixtureDef fixtureDef) {
         fixtureDef.density = 1.0f;
         fixtureDef.friction = 0.4f;
-        fixtureDef.restitution = 0.6f;
+        fixtureDef.restitution = 1;
         fixtureDef.filter.categoryBits = PhysicsEntity.MASK_BULLET;
     }
+
 }

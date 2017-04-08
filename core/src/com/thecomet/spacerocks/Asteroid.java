@@ -1,5 +1,6 @@
 package com.thecomet.spacerocks;
 
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 
 abstract class Asteroid extends PhysicsEntity {
@@ -26,6 +27,11 @@ abstract class Asteroid extends PhysicsEntity {
 
     public Asteroid(Context context) {
         super(context);
+    }
+
+    @Override
+    protected void configureBody(BodyDef bodyDef) {
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
     }
 
     @Override

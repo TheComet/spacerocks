@@ -55,22 +55,25 @@ public class Ship extends PhysicsEntity {
         setupControls();
         createActions();
 
-        addListener(new EventListener() {
-            @Override
-            public boolean handle(Event event) {
-                if (event.getClass() == PreDrawEvent.class) {
-                    updateCamera();
-                    return true;
-                }
-                return false;
+        addListener(event -> {
+            if (event.getClass() == PreDrawEvent.class) {
+                updateCamera();
+                return true;
             }
+            return false;
         });
 
         loadLines("lines/ship.json", 32);
         shipTextureRegion = getTextureRegions().get("ship");
         exhaustTextureRegion = getTextureRegions().get("exhaust");
 
-        setupPhysics(BodyDef.BodyType.DynamicBody);
+        setupPhysics();
+    }
+
+    @Override
+    protected void configureBody(BodyDef bodyDef) {
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.fixedRotation = true;
     }
 
     @Override

@@ -60,6 +60,7 @@ public class SpaceRocks extends ApplicationAdapter {
     }
 
     protected void createEntities() {
+
         Asteroid asteroid = Asteroid.createAsteroid(context, Asteroid.Type.HUGE);
         asteroid.setPosition(200, 200);
 
@@ -67,6 +68,10 @@ public class SpaceRocks extends ApplicationAdapter {
         ship.setPosition(50, 50);
 
         Level.createLevel(context);
+        BackgroundSprinkles backgroundSprinkles = new BackgroundSprinkles(context);
+        backgroundSprinkles.setSprinkleDensity(0.001f);
+        context.stage.addActor(backgroundSprinkles);
+
     }
 
     @Override

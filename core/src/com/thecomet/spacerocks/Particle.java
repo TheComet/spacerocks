@@ -22,7 +22,7 @@ public class Particle extends PhysicsEntity {
     public Particle(Context context) {
         super(context);
         loadLines("lines/particle.json", 1.2f);
-        setupPhysics(BodyDef.BodyType.DynamicBody);
+        setupPhysics();
         setAngularVelocity(getRandomTurnSpeed(-100, 100));
 
         addAction(new Action() {
@@ -39,6 +39,11 @@ public class Particle extends PhysicsEntity {
 
     public void setLife(float life) {
         this.life = life;
+    }
+
+    @Override
+    protected void configureBody(BodyDef bodyDef) {
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
     }
 
     @Override

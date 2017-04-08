@@ -54,4 +54,20 @@ public class GraphicsUtil extends AbstractGraphicsUtil {
 
         return regions;
     }
+
+    @Override
+    public Texture createSprinkleTexture(int width, int height, float sprinkleDensity) {
+        Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA4444);
+        pixmap.setColor(new Color(1, 1, 1, 0.5f));
+        int numberOfSprinkles = (int)(width * height * sprinkleDensity);
+
+        for (int i = 0; i < numberOfSprinkles; i++) {
+            pixmap.drawPixel(
+                    (int)(Math.random() * (width - 1)),
+                    (int)(Math.random() * (height - 1))
+            );
+        }
+
+        return new Texture(pixmap);
+    }
 }

@@ -14,7 +14,12 @@ public class Level extends PhysicsEntity {
     public Level(Context context) {
         super(context);
         loadLines("lines/level1.json", 1000);
-        setupPhysics(BodyDef.BodyType.StaticBody);
+        setupPhysics();
+    }
+
+    @Override
+    protected void configureBody(BodyDef bodyDef) {
+        bodyDef.type = BodyDef.BodyType.StaticBody;
     }
 
     @Override

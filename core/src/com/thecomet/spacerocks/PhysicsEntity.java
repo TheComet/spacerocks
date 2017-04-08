@@ -1,6 +1,5 @@
 package com.thecomet.spacerocks;
 
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -21,17 +20,13 @@ public abstract class PhysicsEntity extends Entity implements Disposable {
         super(context);
     }
 
-    protected void setupPhysics(BodyDef.BodyType bodyType) {
-        createPhysicsFixtures(bodyType);
-        createSynchronisationActions(bodyType);
-    }
-
+    protected abstract void configureBody(BodyDef bodyDef);
     protected abstract void configureFixture(FixtureDef fixtureDef);
 
-    private void createPhysicsFixtures(BodyDef.BodyType bodyType) {
+    protected void setupPhysics() {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = bodyType;
         bodyDef.position.set(getX() / WORLD_SCALE, getY() / WORLD_SCALE);
+        configureBody(bodyDef);
         body = getContext().world.createBody(bodyDef);
 
         for (LineSoup.Group group : getLineSoup().getGroups().values()) {
@@ -58,6 +53,8 @@ public abstract class PhysicsEntity extends Entity implements Disposable {
                 shape.dispose();
             }
         }
+
+        createSynchronisationActions(bodyDef.type);
     }
 
     private void createSynchronisationActions(BodyDef.BodyType bodyType) {
