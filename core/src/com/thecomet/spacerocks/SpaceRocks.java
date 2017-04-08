@@ -8,9 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -41,7 +39,7 @@ public class SpaceRocks extends ApplicationAdapter {
         Ship ship = Ship.createLocalPlayer(context);
         ship.setPosition(50, 50);
 
-        //sLevel.createLevel(context);
+        Level.createLevel(context);
 
         context.stage.addListener(new InputListener() {
             @Override
@@ -65,9 +63,8 @@ public class SpaceRocks extends ApplicationAdapter {
         float delta = Gdx.graphics.getDeltaTime();
         stepLogic(delta);
         stepPhysics(delta);
-
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        context.stage.draw();
+        preDraw();
+        draw();
 
         if (drawDebug) {
             debugRenderer.render(context.world, context.stage.getCamera().combined.scl(PhysicsEntity.WORLD_SCALE));
@@ -88,6 +85,17 @@ public class SpaceRocks extends ApplicationAdapter {
 
     private void stepLogic(float delta) {
         context.stage.act(delta);
+    }
+
+    private void preDraw() {
+        for (Actor actor : context.stage.getActors()) {
+            actor.fire(new PreDrawEvent());
+        }
+    }
+
+    private void draw() {
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        context.stage.draw();
     }
     
     @Override

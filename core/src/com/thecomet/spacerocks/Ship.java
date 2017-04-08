@@ -1,5 +1,6 @@
 package com.thecomet.spacerocks;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -8,6 +9,9 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 
 import javax.xml.ws.Endpoint;
 
@@ -15,6 +19,7 @@ public class Ship extends PhysicsEntity {
     private TextureRegion shipTextureRegion;
     private TextureRegion exhaustTextureRegion;
     private ShipControls controls;
+    private Camera camera;
 
     private static final float ROTATION_SPEED = 200;
     private static final float ACCELERATION = 200;
@@ -30,6 +35,7 @@ public class Ship extends PhysicsEntity {
         Ship ship = new Ship(context);
         context.stage.addActor(ship);
         context.stage.setKeyboardFocus(ship);
+        ship.setCamera(context.stage.getCamera());
         return ship;
     }
 
@@ -49,6 +55,17 @@ public class Ship extends PhysicsEntity {
         setupControls();
         createActions();
 
+        addListener(new EventListener() {
+            @Override
+            public boolean handle(Event event) {
+                if (event.getClass() == PreDrawEvent.class) {
+                    updateCamera();
+                    return true;
+                }
+                return false;
+            }
+        });
+
         loadLines("lines/ship.json", 32);
         shipTextureRegion = getTextureRegions().get("ship");
         exhaustTextureRegion = getTextureRegions().get("exhaust");
@@ -63,6 +80,10 @@ public class Ship extends PhysicsEntity {
         fixtureDef.restitution = 0.6f;
         fixtureDef.filter.categoryBits = PhysicsEntity.MASK_PLAYER;
         fixtureDef.filter.maskBits = ~PhysicsEntity.MASK_BULLET;
+    }
+
+    public void setCamera(Camera camera) {
+        this.camera = camera;
     }
 
     private void setupControls() {
@@ -127,6 +148,12 @@ public class Ship extends PhysicsEntity {
         doDrawExhaust = exhaustTimer >= 0.07;
         if (exhaustTimer >= 0.14) {
             exhaustTimer = 0;
+        }
+    }
+
+    private void updateCamera() {
+        if (camera != null) {
+            camera.position.set(getX() + getOriginX(), getY() + getOriginY(), 0);
         }
     }
 
