@@ -2,11 +2,14 @@ package com.thecomet.spacerocks;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -14,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class SpaceRocks extends ApplicationAdapter {
     private Context context;
     private Box2DDebugRenderer debugRenderer;
+    private boolean drawDebug = false;
 
     private float physicsTimeAccumulator = 0;
     private final static float PHYSICS_DT = 1.0f / 45;
@@ -36,6 +40,17 @@ public class SpaceRocks extends ApplicationAdapter {
 
         Ship ship = Ship.createLocalPlayer(context);
         ship.setPosition(50, 50);
+
+        context.stage.addListener(new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                if (keycode == Input.Keys.F1) {
+                    drawDebug = !drawDebug;
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -51,7 +66,10 @@ public class SpaceRocks extends ApplicationAdapter {
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         context.stage.draw();
-        debugRenderer.render(context.world, context.stage.getCamera().combined.scl(PhysicsEntity.WORLD_SCALE));
+
+        if (drawDebug) {
+            debugRenderer.render(context.world, context.stage.getCamera().combined.scl(PhysicsEntity.WORLD_SCALE));
+        }
     }
 
     private void stepPhysics(float delta) {

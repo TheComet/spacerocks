@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Disposable;
@@ -13,7 +12,6 @@ import com.badlogic.gdx.utils.Disposable;
 import java.util.HashMap;
 
 public class Entity extends Actor implements Disposable {
-    private ShapeRenderer shapeRenderer = new ShapeRenderer();
     private Context context;
     private LineSoup lineSoup;
     private HashMap<String, TextureRegion> textureRegions;
@@ -126,22 +124,6 @@ public class Entity extends Actor implements Disposable {
         for (TextureRegion region : textureRegions.values()) {
             drawTextureRegion(batch, region);
         }
-        batch.end();
-
-        // TODO remove this, it's debug stuff
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setProjectionMatrix(getContext().stage.getCamera().combined);
-        shapeRenderer.setColor(1, 0, 0, 1);
-        Vector2 p = getActionPoint();
-        shapeRenderer.circle(p.x, p.y, 3);
-        p = new Vector2(getX(), getY());
-        shapeRenderer.setColor(0, 1, 0, 1);
-        shapeRenderer.circle(p.x, p.y, 3);
-        p = new Vector2(getX() + getOriginX(), getY() + getOriginY());
-        shapeRenderer.setColor(0, 0.4f, 1, 1);
-        shapeRenderer.circle(p.x, p.y, 3);
-        shapeRenderer.end();
-        batch.begin();
     }
 
     /**
@@ -160,6 +142,5 @@ public class Entity extends Actor implements Disposable {
         for (TextureRegion region : textureRegions.values()) {
             region.getTexture().dispose();
         }
-        shapeRenderer.dispose();
     }
 }

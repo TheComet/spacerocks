@@ -136,7 +136,6 @@ public class Ship extends PhysicsEntity {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha);
         drawTextureRegion(batch, shipTextureRegion);
         if (doDrawExhaust) {
             drawTextureRegion(batch, exhaustTextureRegion);
