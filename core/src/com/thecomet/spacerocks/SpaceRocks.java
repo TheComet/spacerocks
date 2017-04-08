@@ -41,6 +41,8 @@ public class SpaceRocks extends ApplicationAdapter {
         Ship ship = Ship.createLocalPlayer(context);
         ship.setPosition(50, 50);
 
+        //sLevel.createLevel(context);
+
         context.stage.addListener(new InputListener() {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {

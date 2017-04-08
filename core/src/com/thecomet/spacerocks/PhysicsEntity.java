@@ -85,9 +85,9 @@ public abstract class PhysicsEntity extends Entity implements Disposable {
     }
 
     @Override
-    public void setPosition(Vector2 position) {
-        super.setPosition(position);
-        setBodyPosition(position.x, position.y);
+    public void setPosition(float x, float y) {
+        super.setPosition(x, y);
+        setBodyPosition(x, y);
     }
 
     @Override
@@ -97,7 +97,7 @@ public abstract class PhysicsEntity extends Entity implements Disposable {
     }
 
     public void setLinearVelocity(Vector2 velocity) {
-        body.setLinearVelocity(velocity.scl(1.0f / WORLD_SCALE));
+        body.setLinearVelocity(velocity.cpy().scl(1.0f / WORLD_SCALE));
     }
 
     public void setAngularVelocity(float omega) {

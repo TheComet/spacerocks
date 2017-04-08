@@ -53,7 +53,7 @@ public class Ship extends PhysicsEntity {
         shipTextureRegion = getTextureRegions().get("ship");
         exhaustTextureRegion = getTextureRegions().get("exhaust");
 
-        setupPhysics(BodyDef.BodyType.KinematicBody);
+        setupPhysics(BodyDef.BodyType.DynamicBody);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class Ship extends PhysicsEntity {
         fixtureDef.friction = 0.4f;
         fixtureDef.restitution = 0.6f;
         fixtureDef.filter.categoryBits = PhysicsEntity.MASK_PLAYER;
-        fixtureDef.filter.maskBits = PhysicsEntity.MASK_BULLET;
+        fixtureDef.filter.maskBits = ~PhysicsEntity.MASK_BULLET;
     }
 
     private void setupControls() {
@@ -83,7 +83,6 @@ public class Ship extends PhysicsEntity {
                 processShooting();
                 updateRotation(delta);
                 updateVelocity(delta);
-                updatePosition(delta);
                 return false;
             }
         });
@@ -115,10 +114,7 @@ public class Ship extends PhysicsEntity {
         }
 
         velocity.clamp(0, MAX_VELOCITY);
-    }
-
-    private void updatePosition(float delta) {
-        setPosition(getX() + velocity.x * delta, getY() + velocity.y * delta);
+        setLinearVelocity(velocity);
     }
 
     private void updateExhaustFlicker(float timeStep, boolean reset) {
