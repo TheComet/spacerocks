@@ -73,5 +73,6 @@ public class SpaceRocks extends ApplicationAdapter {
     @Override
     public void dispose() {
         context.dispose();
+        debugRenderer.dispose();
     }
 }

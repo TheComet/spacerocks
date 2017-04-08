@@ -104,11 +104,11 @@ public abstract class PhysicsEntity extends Entity implements Disposable {
         body.setAngularVelocity(omega * (float)Math.PI / 180.0f);
     }
 
-public Vector2 getRandomVelocity(float min, float max) {
-    return new Vector2(1, 0)
-            .setToRandomDirection()
-            .scl((float)(Math.random() * (max - min)) + min);
-}
+    public Vector2 getRandomVelocity(float min, float max) {
+        return new Vector2(1, 0)
+                .setToRandomDirection()
+                .scl((float)(Math.random() * (max - min)) + min);
+    }
 
     public float getRandomTurnSpeed(float min, float max) {
         return (float) (Math.random() * (max - min)) + min;
@@ -138,19 +138,10 @@ public Vector2 getRandomVelocity(float min, float max) {
         entity.setRotation(angle * 180.0f / (float)Math.PI);
     }
 
-    /**
-     * When the actor gets removed from the stage, Box2D entities will still remain in the world. We have to remove
-     * them by calling dispose(). Override the call to remove() and insert our cleanup code here.
-     * @return
-     */
-    @Override
-    public boolean remove() {
-        dispose();
-        return super.remove();
-    }
 
     @Override
     public void dispose() {
+        super.dispose();
         getContext().world.destroyBody(body);
     }
 }

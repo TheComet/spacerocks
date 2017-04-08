@@ -8,10 +8,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Disposable;
 
 import java.util.HashMap;
 
-public class Entity extends Actor {
+public class Entity extends Actor implements Disposable {
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
     private Context context;
     private LineSoup lineSoup;
@@ -126,6 +127,8 @@ public class Entity extends Actor {
             drawTextureRegion(batch, region);
         }
         batch.end();
+
+        // TODO remove this, it's debug stuff
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setProjectionMatrix(getContext().stage.getCamera().combined);
         shapeRenderer.setColor(1, 0, 0, 1);
@@ -139,5 +142,24 @@ public class Entity extends Actor {
         shapeRenderer.circle(p.x, p.y, 3);
         shapeRenderer.end();
         batch.begin();
+    }
+
+    /**
+     * When the actor gets removed from the stage, Box2D entities will still remain in the world. We have to remove
+     * them by calling dispose(). Override the call to remove() and insert our cleanup code here.
+     * @return
+     */
+    @Override
+    public boolean remove() {
+        dispose();
+        return super.remove();
+    }
+
+    @Override
+    public void dispose() {
+        for (TextureRegion region : textureRegions.values()) {
+            region.getTexture().dispose();
+        }
+        shapeRenderer.dispose();
     }
 }

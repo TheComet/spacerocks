@@ -2,7 +2,6 @@ package com.thecomet.spacerocks.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.thecomet.spacerocks.Context;
 import com.thecomet.spacerocks.SpaceRocks;
 
 public class DesktopLauncher {

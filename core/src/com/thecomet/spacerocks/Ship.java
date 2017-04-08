@@ -9,6 +9,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.scenes.scene2d.Action;
 
+import javax.xml.ws.Endpoint;
+
 public class Ship extends PhysicsEntity {
     private TextureRegion shipTextureRegion;
     private TextureRegion exhaustTextureRegion;
