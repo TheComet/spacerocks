@@ -16,7 +16,6 @@ public class Entity extends Actor implements Disposable {
     private LineSoup lineSoup;
     private HashMap<String, TextureRegion> textureRegions;
     private Vector2 actionPoint;
-    private boolean doDrawBoundingBoxes = false;
 
     public Entity(Context context) {
         this.context = context;
@@ -48,13 +47,6 @@ public class Entity extends Actor implements Disposable {
                 .rotate(getRotation())
                 .add(getOriginX(), getOriginY())
                 .add(getX(), getY());
-    }
-
-    /**
-     * Useful for debugging pixmap related stuff.
-     */
-    public void drawBoundingBoxes(boolean enable) {
-        doDrawBoundingBoxes = enable;
     }
 
     protected void loadLines(String linesFile, float scaleInPixels) {

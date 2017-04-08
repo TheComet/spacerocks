@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class SpaceRocks extends ApplicationAdapter {
-    private Context context;
+    protected Context context;
     private Box2DDebugRenderer debugRenderer;
     private boolean drawDebug = false;
 
@@ -22,25 +22,12 @@ public class SpaceRocks extends ApplicationAdapter {
 
     @Override
     public void create() {
-        context = new Context();
-        context.world = new World(new Vector2(0, 0), true);
-        context.stage = new Stage();
-        context.graphicsUtil = new GraphicsUtil();
+        context = createContext();
+        createViewport();
+        createRenderers();
+        createEntities();
 
-        Camera camera = new OrthographicCamera();
-        Viewport viewport = new ScreenViewport(camera);
-        context.stage.setViewport(viewport);
-
-        debugRenderer = new Box2DDebugRenderer();
         Gdx.input.setInputProcessor(context.stage);
-
-        Asteroid asteroid = Asteroid.createAsteroid(context, Asteroid.Type.HUGE);
-        asteroid.setPosition(200, 200);
-
-        Ship ship = Ship.createLocalPlayer(context);
-        ship.setPosition(50, 50);
-
-        Level.createLevel(context);
 
         context.stage.addListener(new InputListener() {
             @Override
@@ -52,6 +39,34 @@ public class SpaceRocks extends ApplicationAdapter {
                 return false;
             }
         });
+    }
+
+    protected Context createContext() {
+        Context context = new Context();
+        context.world = new World(new Vector2(0, 0), true);
+        context.stage = new Stage();
+        context.graphicsUtil = new GraphicsUtil();
+        return context;
+    }
+
+    protected void createViewport() {
+        Camera camera = new OrthographicCamera();
+        Viewport viewport = new ScreenViewport(camera);
+        context.stage.setViewport(viewport);
+    }
+
+    protected void createRenderers() {
+        debugRenderer = new Box2DDebugRenderer();
+    }
+
+    protected void createEntities() {
+        Asteroid asteroid = Asteroid.createAsteroid(context, Asteroid.Type.HUGE);
+        asteroid.setPosition(200, 200);
+
+        Ship ship = Ship.createLocalPlayer(context);
+        ship.setPosition(50, 50);
+
+        Level.createLevel(context);
     }
 
     @Override
@@ -95,7 +110,7 @@ public class SpaceRocks extends ApplicationAdapter {
         }
     }
 
-    private void draw() {
+    protected void draw() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         context.stage.draw();
     }
