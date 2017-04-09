@@ -1,12 +1,10 @@
 package com.thecomet.spacerocks;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Disposable;
 
 import java.util.HashMap;
@@ -60,10 +58,24 @@ public class Entity extends Actor implements Disposable {
         actionPoint = lineSoup.getActionPoint();
     }
 
+    /**
+     * Useful for entities that need to register listeners to the root node of the stage, or similar.
+     */
+    protected void onSetStage(Stage stage) {
+    }
+
     protected void drawTextureRegion(Batch batch, TextureRegion textureRegion) {
         batch.draw(textureRegion, getX(), getY(), getOriginX(), getOriginY(),
                 textureRegion.getRegionWidth(), textureRegion.getRegionHeight(),
                 1, 1, getRotation());
+    }
+
+    @Override
+    protected void setStage(Stage stage) {
+        super.setStage(stage);
+        if (stage != null) {
+            onSetStage(stage);
+        }
     }
 
     @Override

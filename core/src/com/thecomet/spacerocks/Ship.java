@@ -8,10 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.*;
 
 import javax.xml.ws.Endpoint;
 
@@ -31,23 +28,6 @@ public class Ship extends PhysicsEntity {
 
     private Vector2 velocity = new Vector2();
 
-    public static Ship createLocalPlayer(Context context) {
-        Ship ship = new Ship(context);
-        context.stage.addActor(ship);
-        context.stage.setKeyboardFocus(ship);
-        ship.setCamera(context.stage.getCamera());
-        return ship;
-    }
-
-    public static Ship createNetworkedPlayer(Context context) {
-        // TODO ???
-        return null;
-    }
-
-    public static Ship createAIPlayer(Context context) {
-        // TODO ???
-        return null;
-    }
 
     public Ship(Context context) {
         super(context);
@@ -55,19 +35,22 @@ public class Ship extends PhysicsEntity {
         setupControls();
         createActions();
 
-        addListener(event -> {
-            if (event.getClass() == PreDrawEvent.class) {
-                updateCamera();
-                return true;
-            }
-            return false;
-        });
-
         loadLines("lines/ship.json", 32);
         shipTextureRegion = getTextureRegions().get("ship");
         exhaustTextureRegion = getTextureRegions().get("exhaust");
 
         setupPhysics();
+    }
+
+    @Override
+    protected void onSetStage(Stage stage) {
+        stage.addListener(event -> {
+            if (event instanceof PreDrawEvent) {
+                updateCamera();
+                return true;
+            }
+            return false;
+        });
     }
 
     @Override
@@ -115,7 +98,11 @@ public class Ship extends PhysicsEntity {
     private void processShooting() {
         if (controls.getShoot()) {
             Vector2 direction = getDirection();
-            Bullet.createBullet(getContext(), getActionPoint(), direction);
+            Bullet bullet = new Bullet(getContext());
+            bullet.setPosition(getActionPoint().sub(bullet.getOriginX(), bullet.getOriginY()));
+            bullet.setDirection(direction);
+            getStage().addActor(bullet);
+
             velocity.mulAdd(direction, -RECOIL_FORCE);
         }
     }

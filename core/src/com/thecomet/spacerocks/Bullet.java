@@ -9,14 +9,6 @@ public class Bullet extends PhysicsEntity {
     private static final float VELOCITY = 800;
     private float life = 0.8f;
 
-    public static Bullet createBullet(Context context, Vector2 position, Vector2 direction) {
-        Bullet bullet = new Bullet(context);
-        context.stage.addActor(bullet);
-        bullet.setPosition(position.sub(bullet.getOriginX(), bullet.getOriginY()));
-        bullet.setLinearVelocity(direction.cpy().scl(VELOCITY));
-        return bullet;
-    }
-
     public Bullet(Context context) {
         super(context);
 
@@ -34,6 +26,10 @@ public class Bullet extends PhysicsEntity {
                 return false;
             }
         });
+    }
+
+    public void setDirection(Vector2 direction) {
+        setLinearVelocity(direction.cpy().scl(VELOCITY));
     }
 
     @Override

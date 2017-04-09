@@ -13,7 +13,7 @@ public class Particle extends PhysicsEntity {
         for (int i = 0; i < particleCount; i++) {
             Particle particle = new Particle(context);
             particle.setPosition(position);
-            particle.setLinearVelocity(particle.getRandomVelocity(0, velocity));
+            particle.setLinearVelocity(Util.getRandomVelocity(0, velocity));
             particle.setLife(MathUtils.random(0.2f, 1.0f));
             context.stage.addActor(particle);
         }
@@ -23,7 +23,7 @@ public class Particle extends PhysicsEntity {
         super(context);
         loadLines("lines/particle.json", 1.2f);
         setupPhysics();
-        setAngularVelocity(getRandomTurnSpeed(-100, 100));
+        setAngularVelocity(MathUtils.random(-100, 100));
 
         addAction(new Action() {
             @Override

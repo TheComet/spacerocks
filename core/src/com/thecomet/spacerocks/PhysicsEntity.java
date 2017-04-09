@@ -93,22 +93,20 @@ public abstract class PhysicsEntity extends Entity implements Disposable {
         setBodyRotation(angle);
     }
 
+    public Vector2 getLinearVelocity() {
+        return body.getLinearVelocity();
+    }
+
     public void setLinearVelocity(Vector2 velocity) {
         body.setLinearVelocity(velocity.cpy().scl(1.0f / WORLD_SCALE));
     }
 
+    public float getAngularVelocity() {
+        return body.getAngularVelocity();
+    }
+
     public void setAngularVelocity(float omega) {
         body.setAngularVelocity(omega * (float)Math.PI / 180.0f);
-    }
-
-    public Vector2 getRandomVelocity(float min, float max) {
-        return new Vector2(1, 0)
-                .setToRandomDirection()
-                .scl((float)(Math.random() * (max - min)) + min);
-    }
-
-    public float getRandomTurnSpeed(float min, float max) {
-        return (float) (Math.random() * (max - min)) + min;
     }
 
     private void setBodyPosition(float x, float y) {

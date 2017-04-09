@@ -21,7 +21,6 @@ abstract class Asteroid extends PhysicsEntity {
             default: throw new RuntimeException("Unhandled asteroid type creation");
         }
 
-        context.stage.addActor(asteroid);
         return asteroid;
     }
 

@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.*;
@@ -63,15 +64,20 @@ public class SpaceRocks extends ApplicationAdapter {
 
         Asteroid asteroid = Asteroid.createAsteroid(context, Asteroid.Type.HUGE);
         asteroid.setPosition(200, 200);
+        asteroid.setLinearVelocity(Util.getRandomVelocity(5, 20));
+        asteroid.setAngularVelocity(MathUtils.random(-100, 100));
+        context.stage.addActor(asteroid);
 
-        Ship ship = Ship.createLocalPlayer(context);
+        Ship ship = new Ship(context);
         ship.setPosition(50, 50);
+        ship.setCamera(context.stage.getCamera());
+        context.stage.setKeyboardFocus(ship);
+        context.stage.addActor(ship);
 
         Level.createLevel(context);
         BackgroundSprinkles backgroundSprinkles = new BackgroundSprinkles(context);
         backgroundSprinkles.setSprinkleDensity(0.001f);
         context.stage.addActor(backgroundSprinkles);
-
     }
 
     @Override
@@ -109,10 +115,7 @@ public class SpaceRocks extends ApplicationAdapter {
     }
 
     private void preDraw() {
-        PreDrawEvent event = new PreDrawEvent();
-        for (Actor actor : context.stage.getActors()) {
-            actor.fire(event);
-        }
+        context.stage.getRoot().fire(new PreDrawEvent());
     }
 
     protected void draw() {
