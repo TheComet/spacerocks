@@ -15,6 +15,8 @@ public class LineSoup {
     private float aspectRatio;
     private float scaleInPixels;
 
+    private static HashMap<String, LineSoup> lineSoupCache = new HashMap<>();
+
     private LineSoup(LineSoup other, float scaleInPixels) {
         HashMap<String, Group> groupsCopy = new HashMap<>();
         for (Map.Entry<String, Group> stringGroupEntry : other.groups.entrySet()) {
@@ -142,8 +144,13 @@ public class LineSoup {
     }
 
     public static LineSoup load(String jsonFile) {
-        Json json = new Json();
-        return json.fromJson(LineSoup.class, Gdx.files.internal(jsonFile));
+        if (lineSoupCache.containsKey(jsonFile)) {
+            return lineSoupCache.get(jsonFile);
+        } else {
+            LineSoup lineSoup = new Json().fromJson(LineSoup.class, Gdx.files.internal(jsonFile));
+            lineSoupCache.put(jsonFile, lineSoup);
+            return lineSoup;
+        }
     }
 
     public LineSoup cookSoup(float scaleInPixels) {

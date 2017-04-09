@@ -1,11 +1,15 @@
 package com.thecomet.spacerocks;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 
-abstract class Asteroid extends PhysicsEntity {
+class Asteroid extends PhysicsEntity {
     public Asteroid(Context context, LineSoup lineSoup) {
-        super(context, lineSoup);
+        super(context, lineSoup.cookSoup(80));
+        setPosition(100, 100);
+        setLinearVelocity(Util.getRandomVelocity(5, 20));
+        setAngularVelocity(MathUtils.random(-100, 100));
     }
 
     @Override
