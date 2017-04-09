@@ -18,7 +18,7 @@ public class AsteroidGenerator {
     }
 
     public Asteroid generateAsteroid() {
-        return new ProcedurallyGeneratedAsteroid(context, generateLineSoup());
+        return new Asteroid(context, generateLineSoup());
     }
 
     private LineSoup generateLineSoup() {
