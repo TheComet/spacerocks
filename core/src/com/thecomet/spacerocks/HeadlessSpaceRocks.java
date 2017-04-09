@@ -18,6 +18,10 @@ public class HeadlessSpaceRocks extends AbstractSpaceRocks {
     }
 
     @Override
+    protected void createViewport() {
+    }
+
+    @Override
     protected void setupNetworking() {
         context.server.start();
         try {
@@ -28,10 +32,18 @@ public class HeadlessSpaceRocks extends AbstractSpaceRocks {
     }
 
     @Override
+    protected void preDraw() {
+    }
+
+    @Override
     protected void createRenderers() {
     }
 
     @Override
     protected void draw() {
+    }
+
+    @Override
+    protected void drawDebug() {
     }
 }

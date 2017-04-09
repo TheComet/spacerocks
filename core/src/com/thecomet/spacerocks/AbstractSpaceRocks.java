@@ -20,6 +20,7 @@ public abstract class AbstractSpaceRocks extends ApplicationAdapter {
         createViewport();
         createRenderers();
         createEntities();
+        setupNetworking();
 
         Gdx.input.setInputProcessor(context.stage);
 
@@ -38,6 +39,7 @@ public abstract class AbstractSpaceRocks extends ApplicationAdapter {
     protected abstract Context createContext();
     protected abstract void createViewport();
     protected abstract void createRenderers();
+    protected abstract void setupNetworking();
     protected abstract void preDraw();
     protected abstract void draw();
     protected abstract void drawDebug();
@@ -80,8 +82,10 @@ public abstract class AbstractSpaceRocks extends ApplicationAdapter {
         _stepPhysics(delta);
         preDraw();
         draw();
-        drawDebug();
 
+        if (drawDebug) {
+            drawDebug();
+        }
     }
 
     private void _stepPhysics(float delta) {

@@ -36,6 +36,10 @@ public class SpaceRocks extends AbstractSpaceRocks {
     }
 
     @Override
+    protected void setupNetworking() {
+    }
+
+    @Override
     protected void preDraw() {
         context.stage.getRoot().fire(new PreDrawEvent());
     }
