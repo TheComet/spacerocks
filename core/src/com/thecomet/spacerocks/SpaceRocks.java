@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -38,6 +37,21 @@ public class SpaceRocks extends AbstractSpaceRocks {
 
     @Override
     protected void setupNetworking() {
+    }
+
+    @Override
+    protected void stepLogic(float delta) {
+        context.stage.act(delta);
+    }
+
+    @Override
+    protected void stepPhysics(float delta) {
+        context.world.step(delta, 6, 2);
+    }
+
+    @Override
+    protected void stepNetwork(float delta) {
+
     }
 
     @Override

@@ -22,6 +22,11 @@ public class HeadlessSpaceRocks extends AbstractSpaceRocks {
     }
 
     @Override
+    protected void createRenderers() {
+
+    }
+
+    @Override
     protected void setupNetworking() {
         context.server.start();
         try {
@@ -32,11 +37,22 @@ public class HeadlessSpaceRocks extends AbstractSpaceRocks {
     }
 
     @Override
-    protected void preDraw() {
+    protected void stepLogic(float delta) {
+        context.stage.act(delta);
     }
 
     @Override
-    protected void createRenderers() {
+    protected void stepPhysics(float delta) {
+        context.world.step(delta, 6, 2);
+    }
+
+    @Override
+    protected void stepNetwork(float delta) {
+
+    }
+
+    @Override
+    protected void preDraw() {
     }
 
     @Override

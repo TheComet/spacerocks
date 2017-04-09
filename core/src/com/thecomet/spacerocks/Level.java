@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 
 public class Level extends PhysicsEntity {
     public Level(Context context) {
-        super(context, LineSoup.load("lines/level1.json").cookSoup(1000));
+        super(context, LineSoup.load("lines/level1.json").cookSoup(2500));
     }
 
     @Override

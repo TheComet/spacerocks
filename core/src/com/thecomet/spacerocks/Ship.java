@@ -18,16 +18,14 @@ public class Ship extends PhysicsEntity {
     private ShipControls controls;
     private Camera camera;
 
-    private static final float ROTATION_SPEED = 200;
-    private static final float ACCELERATION = 200;
-    private static final float MAX_VELOCITY = 200;
-    private static final float RECOIL_FORCE = 0.0002f;
+    private static final float ROTATION_SPEED = 320;
+    private static final float ACCELERATION = 300;
+    private static final float DRAG = 0.3f;
+    private static final float MAX_VELOCITY = 320;
+    private static final float RECOIL_FORCE = 30;
 
     private float exhaustTimer = 0;
     private boolean doDrawExhaust = false;
-
-    private Vector2 velocity = new Vector2();
-
 
     public Ship(Context context) {
         super(context, LineSoup.load("lines/ship.json").cookSoup(32));
@@ -95,13 +93,21 @@ public class Ship extends PhysicsEntity {
     private void processShooting() {
         if (controls.getShoot()) {
             Vector2 direction = getDirection();
-            Bullet bullet = new Bullet(getContext());
-            bullet.setPosition(getActionPoint().sub(bullet.getOriginX(), bullet.getOriginY()));
-            bullet.setDirection(direction);
-            getStage().addActor(bullet);
-
-            velocity.mulAdd(direction, -RECOIL_FORCE);
+            createBullet(direction);
+            recoil(direction);
         }
+    }
+
+    private void createBullet(Vector2 direction) {
+        Bullet bullet = new Bullet(getContext());
+        bullet.setPosition(getActionPoint().sub(bullet.getOriginX(), bullet.getOriginY()));
+        bullet.setDirection(direction);
+        getStage().addActor(bullet);
+    }
+
+    private void recoil(Vector2 direction) {
+        Vector2 velocity = getLinearVelocity();
+        setLinearVelocity(velocity.mulAdd(direction, -RECOIL_FORCE));
     }
 
     private void updateRotation(float timeStep) {
@@ -113,15 +119,20 @@ public class Ship extends PhysicsEntity {
     }
 
     private void updateVelocity(float timeStep) {
+        Vector2 direction = getDirection();
+        Vector2 velocity = getLinearVelocity();
         if (controls.getAccelerate()) {
-            Vector2 direction = getDirection();
-            velocity.mulAdd(direction, timeStep * ACCELERATION);
+            velocity.mulAdd(direction, ACCELERATION * timeStep);
+            velocity.clamp(0, MAX_VELOCITY);
+
             updateExhaustFlicker(timeStep, false);
         } else {
+            float len = velocity.len();
+            len -= len * Math.min(DRAG * timeStep, 1.0f);
+            velocity.nor().scl(len);
+
             updateExhaustFlicker(timeStep, true);
         }
-
-        velocity.clamp(0, MAX_VELOCITY);
         setLinearVelocity(velocity);
     }
 

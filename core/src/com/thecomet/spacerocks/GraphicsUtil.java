@@ -17,9 +17,9 @@ public class GraphicsUtil extends AbstractGraphicsUtil {
         int height = (int) lineSoup.getScaleInPixels();
 
         if (lineSoup.getAspectRatio() > 1.0f) {
-            height /= lineSoup.getAspectRatio();
+            height = (int) Math.ceil(lineSoup.getAspectRatio() * height);
         } else {
-            width *= lineSoup.getAspectRatio();
+            width = (int) Math.ceil(lineSoup.getAspectRatio() * width);
         }
 
         Pixmap.Format format = Pixmap.Format.RGBA8888;

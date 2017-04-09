@@ -96,9 +96,9 @@ public class LineSoup {
         scale -= 1;
 
         float minx = Float.MAX_VALUE;
-        float maxx = -Float.MIN_VALUE;
+        float maxx = -Float.MAX_VALUE;
         float miny = Float.MAX_VALUE;
-        float maxy = -Float.MIN_VALUE;
+        float maxy = -Float.MAX_VALUE;
 
         // Computes the bounding box
         for (Group group : groups.values()) {

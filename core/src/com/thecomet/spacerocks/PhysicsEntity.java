@@ -95,7 +95,7 @@ public abstract class PhysicsEntity extends Entity implements Disposable {
     }
 
     public Vector2 getLinearVelocity() {
-        return body.getLinearVelocity();
+        return body.getLinearVelocity().scl(WORLD_SCALE);
     }
 
     public void setLinearVelocity(Vector2 velocity) {
@@ -103,7 +103,7 @@ public abstract class PhysicsEntity extends Entity implements Disposable {
     }
 
     public float getAngularVelocity() {
-        return body.getAngularVelocity();
+        return body.getAngularVelocity() * 180.0f / (float)Math.PI;
     }
 
     public void setAngularVelocity(float omega) {
