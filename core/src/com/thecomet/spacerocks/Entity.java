@@ -48,7 +48,11 @@ public class Entity extends Actor implements Disposable {
     }
 
     protected void loadLines(String linesFile, float scaleInPixels) {
-        lineSoup = LineSoup.load(linesFile);
+        setLineSoup(LineSoup.load(linesFile), scaleInPixels);
+    }
+
+    public void setLineSoup(LineSoup lineSoup, float scaleInPixels) {
+        this.lineSoup = lineSoup;
         lineSoup.rescaleLines(scaleInPixels - 1);
         textureRegions = context.graphicsUtil.renderPixmapsFromLineSoup(lineSoup, (int)scaleInPixels);
 

@@ -35,6 +35,7 @@ public class Bullet extends PhysicsEntity {
     @Override
     protected void configureBody(BodyDef bodyDef) {
         bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.bullet = true;
     }
 
     @Override
