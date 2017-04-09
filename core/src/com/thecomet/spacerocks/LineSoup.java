@@ -6,28 +6,71 @@ import com.badlogic.gdx.utils.Json;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class LineSoup {
     private HashMap<String, Group> groups = new HashMap<String, Group>();
     private Vector2 origin = new Vector2(0, 0);
     private Vector2 actionPoint = new Vector2(0, 0);
     private float aspectRatio;
+    private float scaleInPixels;
+
+    private LineSoup(LineSoup other, float scaleInPixels) {
+        HashMap<String, Group> groupsCopy = new HashMap<>();
+        for (Map.Entry<String, Group> stringGroupEntry : other.groups.entrySet()) {
+            groupsCopy.put(stringGroupEntry.getKey(), stringGroupEntry.getValue().cpy());
+        }
+        this.groups = groupsCopy;
+
+        this.origin = other.origin.cpy();
+        this.actionPoint = other.actionPoint.cpy();
+        this.aspectRatio = other.aspectRatio;
+
+        this.scaleInPixels = scaleInPixels;
+        rescaleLines(scaleInPixels);
+    }
+
+    public LineSoup() {}
+
+    public float getScaleInPixels() {
+        return scaleInPixels;
+    }
 
     public static class Segment {
-        Segment() {}
+        public Vector2 start;
+        public Vector2 end;
 
-        Segment(Vector2 start, Vector2 end) {
+        public Segment() {}
+
+        public Segment(Vector2 start, Vector2 end) {
             this.start = start;
             this.end = end;
         }
 
-        public Vector2 start;
-        public Vector2 end;
+        Segment cpy() {
+            return new Segment(this.start.cpy(), this.end.cpy());
+        }
     }
 
     public static class Group {
         public boolean physics = true;
         public ArrayList<Segment> segments = new ArrayList<Segment>();
+
+        public Group() {}
+
+        public Group(boolean physics, ArrayList<Segment> segments) {
+            this.physics = physics;
+            this.segments = segments;
+        }
+
+        Group cpy() {
+            ArrayList<Segment> segmentsCopy = new ArrayList<>();
+            for (Segment segment : segments) {
+                segmentsCopy.add(segment.cpy());
+            }
+
+            return new Group(physics, segmentsCopy);
+        }
     }
 
     public HashMap<String, Group> getGroups() {
@@ -46,7 +89,10 @@ public class LineSoup {
         return aspectRatio;
     }
 
-    public void rescaleLines(float scale) {
+    private void rescaleLines(float scale) {
+        // Pixmaps range from 0 to scale - 1, but scale is in pixels
+        scale -= 1;
+
         float minx = Float.MAX_VALUE;
         float maxx = -Float.MIN_VALUE;
         float miny = Float.MAX_VALUE;
@@ -98,5 +144,9 @@ public class LineSoup {
     public static LineSoup load(String jsonFile) {
         Json json = new Json();
         return json.fromJson(LineSoup.class, Gdx.files.internal(jsonFile));
+    }
+
+    public LineSoup cookSoup(float scaleInPixels) {
+        return new LineSoup(this, scaleInPixels);
     }
 }

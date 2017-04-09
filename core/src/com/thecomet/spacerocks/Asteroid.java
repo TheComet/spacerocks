@@ -4,28 +4,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 
 abstract class Asteroid extends PhysicsEntity {
-    enum Type {
-        TINY,
-        SMALL,
-        KINDALARGE,
-        HUGE
-    }
-
-    public static Asteroid createAsteroid(Context context, Type type) {
-        Asteroid asteroid;
-        switch (type) {
-            case TINY:       asteroid = new TinyAsteroid(context); break;
-            case SMALL:      asteroid = new HugeAsteroid(context); break;
-            case KINDALARGE: asteroid = new KindaLargeAsteroid(context); break;
-            case HUGE:       asteroid = new HugeAsteroid(context); break;
-            default: throw new RuntimeException("Unhandled asteroid type creation");
-        }
-
-        return asteroid;
-    }
-
-    public Asteroid(Context context) {
-        super(context);
+    public Asteroid(Context context, LineSoup lineSoup) {
+        super(context, lineSoup);
     }
 
     @Override

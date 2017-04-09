@@ -15,7 +15,7 @@ public class HeadlessGraphicsUtil extends AbstractGraphicsUtil {
      * group and insert them into the hash map.
      */
     @Override
-    public HashMap<String, TextureRegion> renderPixmapsFromLineSoup(LineSoup lineSoup, int scaleInPixels, boolean doDrawBoundingBoxes) {
+    public HashMap<String, TextureRegion> renderPixmapsFromLineSoup(LineSoup lineSoup, boolean doDrawBoundingBoxes) {
         HashMap<String, TextureRegion> textureRegions = new HashMap<>();
         lineSoup.getGroups().forEach((name, group) -> {
             textureRegions.put(name, new TextureRegion());

@@ -10,10 +10,7 @@ public class Bullet extends PhysicsEntity {
     private float life = 0.8f;
 
     public Bullet(Context context) {
-        super(context);
-
-        loadLines("lines/bullet.json", 5);
-        setupPhysics();
+        super(context, LineSoup.load("lines/bullet.json").cookSoup(5));
 
         addAction(new Action() {
             @Override

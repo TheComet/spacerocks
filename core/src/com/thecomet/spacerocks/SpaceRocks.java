@@ -62,11 +62,15 @@ public class SpaceRocks extends ApplicationAdapter {
 
     protected void createEntities() {
         AsteroidGenerator generator = new AsteroidGenerator(context);
-        Asteroid asteroid = generator.generateAsteroid();
-        asteroid.setPosition(300, 300);
-        asteroid.setLinearVelocity(Util.getRandomVelocity(5, 20));
-        asteroid.setAngularVelocity(MathUtils.random(-100, 100));
-        context.stage.addActor(asteroid);
+        Asteroid asteroid;
+
+        for (int i = 0; i < 10; i++) {
+            asteroid = generator.generateAsteroid();
+            asteroid.setPosition(300, 300);
+            asteroid.setLinearVelocity(Util.getRandomVelocity(5, 20));
+            asteroid.setAngularVelocity(MathUtils.random(-100, 100));
+            context.stage.addActor(asteroid);
+        }
 
         Ship ship = new Ship(context);
         ship.setPosition(50, 50);
@@ -74,7 +78,9 @@ public class SpaceRocks extends ApplicationAdapter {
         context.stage.setKeyboardFocus(ship);
         context.stage.addActor(ship);
 
-        Level.createLevel(context);
+        Level level = new Level(context);
+        context.stage.addActor(level);
+
         BackgroundSprinkles backgroundSprinkles = new BackgroundSprinkles(context);
         backgroundSprinkles.setSprinkleDensity(0.001f);
         context.stage.addActor(backgroundSprinkles);

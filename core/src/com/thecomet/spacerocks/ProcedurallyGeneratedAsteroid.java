@@ -5,12 +5,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 
 public class ProcedurallyGeneratedAsteroid extends Asteroid {
-    public ProcedurallyGeneratedAsteroid(Context context) {
-        super(context);
-    }
-
-    public void initialize() {
-        setupPhysics();
+    public ProcedurallyGeneratedAsteroid(Context context, LineSoup lineSoup) {
+        super(context, lineSoup.cookSoup(80));
         setPosition(100, 100);
         setLinearVelocity(Util.getRandomVelocity(5, 20));
         setAngularVelocity(MathUtils.random(-100, 100));

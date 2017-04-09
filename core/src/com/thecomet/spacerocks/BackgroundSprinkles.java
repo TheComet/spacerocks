@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 public class BackgroundSprinkles extends Entity {
     private Texture sprinkleTexture;
     public BackgroundSprinkles(Context context) {
-        super(context);
+        super(context, null);
     }
 
     public void setSprinkleDensity(float density) {

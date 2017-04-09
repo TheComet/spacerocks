@@ -18,17 +18,11 @@ public class AsteroidGenerator {
     }
 
     public Asteroid generateAsteroid() {
-        ProcedurallyGeneratedAsteroid asteroid = new ProcedurallyGeneratedAsteroid(context);
-        asteroid.setLineSoup(generateLineSoup(), 80);
-        asteroid.initialize();
-        context.stage.addActor(asteroid);
-        return asteroid;
+        return new ProcedurallyGeneratedAsteroid(context, generateLineSoup());
     }
 
     private LineSoup generateLineSoup() {
-        LineSoup lineSoup = new ProcedurallyGeneratedLineSoup();
-
-        return lineSoup;
+        return new ProcedurallyGeneratedLineSoup();
     }
 }
 

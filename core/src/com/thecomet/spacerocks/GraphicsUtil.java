@@ -10,11 +10,12 @@ import java.util.HashMap;
 public class GraphicsUtil extends AbstractGraphicsUtil {
 
     @Override
-    public HashMap<String, TextureRegion> renderPixmapsFromLineSoup(LineSoup lineSoup, int scaleInPixels, boolean doDrawBoundingBoxes) {
+    public HashMap<String, TextureRegion> renderPixmapsFromLineSoup(LineSoup lineSoup, boolean doDrawBoundingBoxes) {
         // Depending on whether width or height is larger, scale one or the other using the aspect ratio. The result is
         // such that neither the width nor the height will exceed "scaleInPixels" if they are different.
-        int width = scaleInPixels;
-        int height = scaleInPixels;
+        int width = (int) lineSoup.getScaleInPixels();
+        int height = (int) lineSoup.getScaleInPixels();
+
         if (lineSoup.getAspectRatio() > 1.0f) {
             height /= lineSoup.getAspectRatio();
         } else {

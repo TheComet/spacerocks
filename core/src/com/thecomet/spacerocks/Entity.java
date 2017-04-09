@@ -15,8 +15,9 @@ public class Entity extends Actor implements Disposable {
     private HashMap<String, TextureRegion> textureRegions;
     private Vector2 actionPoint;
 
-    public Entity(Context context) {
+    public Entity(Context context, LineSoup lineSoup) {
         this.context = context;
+        setLineSoup(lineSoup);
     }
 
     protected Context getContext() {
@@ -47,19 +48,17 @@ public class Entity extends Actor implements Disposable {
                 .add(getX(), getY());
     }
 
-    protected void loadLines(String linesFile, float scaleInPixels) {
-        setLineSoup(LineSoup.load(linesFile), scaleInPixels);
-    }
-
-    public void setLineSoup(LineSoup lineSoup, float scaleInPixels) {
+    private void setLineSoup(LineSoup lineSoup) {
         this.lineSoup = lineSoup;
-        lineSoup.rescaleLines(scaleInPixels - 1);
-        textureRegions = context.graphicsUtil.renderPixmapsFromLineSoup(lineSoup, (int)scaleInPixels);
 
-        Vector2 origin = lineSoup.getOrigin();
-        setOrigin(origin.x, origin.y);
+        if (lineSoup != null) {
+            textureRegions = context.graphicsUtil.renderPixmapsFromLineSoup(lineSoup);
 
-        actionPoint = lineSoup.getActionPoint();
+            Vector2 origin = lineSoup.getOrigin();
+            setOrigin(origin.x, origin.y);
+
+            actionPoint = lineSoup.getActionPoint();
+        }
     }
 
     /**

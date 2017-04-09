@@ -16,14 +16,15 @@ public abstract class PhysicsEntity extends Entity implements Disposable {
 
     private Body body;
 
-    public PhysicsEntity(Context context) {
-        super(context);
+    public PhysicsEntity(Context context, LineSoup lineSoup) {
+        super(context, lineSoup);
+        setupPhysics();
     }
 
     protected abstract void configureBody(BodyDef bodyDef);
     protected abstract void configureFixture(FixtureDef fixtureDef);
 
-    protected void setupPhysics() {
+    private void setupPhysics() {
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(getX() / WORLD_SCALE, getY() / WORLD_SCALE);
         configureBody(bodyDef);

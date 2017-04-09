@@ -20,9 +20,7 @@ public class Particle extends PhysicsEntity {
     }
 
     public Particle(Context context) {
-        super(context);
-        loadLines("lines/particle.json", 1.2f);
-        setupPhysics();
+        super(context, LineSoup.load("lines/particle.json").cookSoup(1.2f));
         setAngularVelocity(MathUtils.random(-100, 100));
 
         addAction(new Action() {
@@ -49,7 +47,7 @@ public class Particle extends PhysicsEntity {
     @Override
     protected void configureFixture(FixtureDef fixtureDef) {
         fixtureDef.friction = 0.0f;
-        fixtureDef.density = 0.01f;
+        fixtureDef.density = 1f;
         fixtureDef.filter.categoryBits = MASK_PARTICLE;
         fixtureDef.filter.maskBits = ~MASK_PARTICLE;
     }

@@ -30,16 +30,13 @@ public class Ship extends PhysicsEntity {
 
 
     public Ship(Context context) {
-        super(context);
+        super(context, LineSoup.load("lines/ship.json").cookSoup(32));
 
         setupControls();
         createActions();
 
-        loadLines("lines/ship.json", 32);
         shipTextureRegion = getTextureRegions().get("ship");
         exhaustTextureRegion = getTextureRegions().get("exhaust");
-
-        setupPhysics();
     }
 
     @Override
