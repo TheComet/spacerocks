@@ -34,7 +34,7 @@ class ProcedurallyGeneratedLineSoup extends LineSoup {
         float currentAngle = 0;
         ArrayList<Vector2> points = new ArrayList<>();
 
-        while(currentAngle < 360) {
+        do {
             float angleDifference = MathUtils.random(AsteroidGenerator.MIN_ANGLE, AsteroidGenerator.MAX_ANGLE);
             float distance = MathUtils.random(AsteroidGenerator.MIN_DISTANCE, AsteroidGenerator.MAX_DISTANCE);
             currentAngle += angleDifference;
@@ -43,7 +43,7 @@ class ProcedurallyGeneratedLineSoup extends LineSoup {
             newPoint.setAngle(currentAngle);
             newPoint.setLength(distance);
             points.add(newPoint);
-        }
+        } while (currentAngle < 360);
 
         addSegments(group, points);
 

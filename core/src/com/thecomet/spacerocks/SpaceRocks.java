@@ -64,9 +64,9 @@ public class SpaceRocks extends ApplicationAdapter {
         AsteroidGenerator generator = new AsteroidGenerator(context);
         Asteroid asteroid;
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
             asteroid = generator.generateAsteroid();
-            asteroid.setPosition(300, 300);
+            asteroid.setPosition(MathUtils.random(50, 950), MathUtils.random(50, 950));
             asteroid.setLinearVelocity(Util.getRandomVelocity(5, 20));
             asteroid.setAngularVelocity(MathUtils.random(-100, 100));
             context.stage.addActor(asteroid);
