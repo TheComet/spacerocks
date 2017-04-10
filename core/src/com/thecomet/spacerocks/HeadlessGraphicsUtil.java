@@ -8,7 +8,7 @@ import java.util.HashMap;
 /**
  * Do absolutely nothing.
  */
-public class HeadlessGraphicsUtil extends AbstractGraphicsUtil {
+public class HeadlessGraphicsUtil extends GraphicsUtil {
 
     /**
      * The callee expects the line groups to exist in the returned hash map. Create empty texture regions for each

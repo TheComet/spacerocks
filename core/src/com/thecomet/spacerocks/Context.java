@@ -9,7 +9,7 @@ import com.esotericsoftware.kryonet.Server;
 public class Context implements Disposable {
     public Stage stage;
     public World world;
-    public IGraphicsUtil graphicsUtil;
+    public GraphicsUtil graphicsUtil;
     public Client client;
     public Server server;
 

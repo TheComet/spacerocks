@@ -78,7 +78,18 @@ public class Entity extends Actor implements Disposable {
         super.setStage(stage);
         if (stage != null) {
             onSetStage(stage);
+
+            stage.addListener(event -> {
+                if (event instanceof PreDrawEvent) {
+                    preDraw();
+                    return true;
+                }
+                return false;
+            });
         }
+    }
+
+    public void preDraw() {
     }
 
     @Override

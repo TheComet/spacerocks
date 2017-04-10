@@ -10,6 +10,9 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.esotericsoftware.kryonet.Client;
+
+import java.io.IOException;
 
 public class SpaceRocks extends AbstractSpaceRocks {
     private Box2DDebugRenderer debugRenderer;
@@ -19,7 +22,8 @@ public class SpaceRocks extends AbstractSpaceRocks {
         Context context = new Context();
         context.world = new World(new Vector2(0, 0), true);
         context.stage = new Stage();
-        context.graphicsUtil = new GraphicsUtil();
+        context.graphicsUtil = new DrawingGraphicsUtil();
+        context.client = new Client();
         return context;
     }
 
@@ -37,6 +41,12 @@ public class SpaceRocks extends AbstractSpaceRocks {
 
     @Override
     protected void setupNetworking() {
+        context.client.start();
+        try {
+            context.client.connect(5000, "127.0.0.1", 8234, 11434);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -51,7 +61,7 @@ public class SpaceRocks extends AbstractSpaceRocks {
 
     @Override
     protected void stepNetwork(float delta) {
-
+        context.stage.getRoot().fire(new StepNetworkEvent());
     }
 
     @Override

@@ -38,17 +38,6 @@ public class Ship extends PhysicsEntity {
     }
 
     @Override
-    protected void onSetStage(Stage stage) {
-        stage.addListener(event -> {
-            if (event instanceof PreDrawEvent) {
-                updateCamera();
-                return true;
-            }
-            return false;
-        });
-    }
-
-    @Override
     protected void configureBody(BodyDef bodyDef) {
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.fixedRotation = true;
@@ -153,6 +142,11 @@ public class Ship extends PhysicsEntity {
         if (camera != null) {
             camera.position.set(getX() + getOriginX(), getY() + getOriginY(), 0);
         }
+    }
+
+    @Override
+    public void preDraw() {
+        updateCamera();
     }
 
     @Override
